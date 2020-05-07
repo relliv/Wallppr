@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- #region White -->
+
+    <Color x:Key="White">#fefefe</Color>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+
+    <Color x:Key="SnowWhite">#f5fefd</Color>
+    <SolidColorBrush x:Key="SnowWhiteBrush" Color="{StaticResource SnowWhite}"/>
+
+    <!-- #endregion -->
+
+    <!--#region Theme Colors -->
+
+    <Color x:Key="ThemeColor1">#130912</Color>
+    <SolidColorBrush x:Key="ThemeColor1Brush" Color="{StaticResource ThemeColor1}"/>
+
+    <Color x:Key="ThemeColor2">#3e1c33</Color>
+    <SolidColorBrush x:Key="ThemeColor2Brush" Color="{StaticResource ThemeColor2}"/>
+
+    <Color x:Key="ThemeColor3">#602749</Color>
+    <SolidColorBrush x:Key="ThemeColor3Brush" Color="{StaticResource ThemeColor3}"/>
+
+    <Color x:Key="ThemeColor4">#b14623</Color>
+    <SolidColorBrush x:Key="ThemeColor4Brush" Color="{StaticResource ThemeColor4}"/>
+
+    <Color x:Key="ThemeColor5">#f6921d</Color>
+    <SolidColorBrush x:Key="ThemeColor5Brush" Color="{StaticResource ThemeColor5}"/>
+
+    <!--#endregion-->
+
+</ResourceDictionary>

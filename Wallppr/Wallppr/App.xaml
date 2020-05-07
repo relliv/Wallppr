@@ -1,0 +1,55 @@
+<Application x:Class="Wallppr.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:converters="clr-namespace:Wallppr.UI.Converters" 
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:Wallppr.ViewModel.Base" 
+             d1p1:Ignorable="d">
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- View Model Locator -->
+            <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True"/>
+
+            <!-- Converters -->
+            <converters:IntToColorConverter x:Key="IntToColorConverter" />
+            <converters:SubstringConverter x:Key="SubstringConverter" />
+            <converters:MultipleBindingFallbackConverter x:Key="MultipleBindingFallbackConverter" />
+            <converters:BooleanToBorderThicknessConverter x:Key="BooleanToBorderThicknessConverter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+            <converters:ReverseBoolConverter x:Key="ReverseBoolConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolToReverseVisibilityConverter x:Key="BoolToReverseVisibilityConverter" />
+            <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <converters:MultipleParametersConverter x:Key="MultipleParametersConverter" />
+
+            <!-- Resource Dictionaries -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Colors -->
+                <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialIcons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialColors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/Colors.xaml" />
+
+                <!-- Control Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ScrollBarStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ListViewStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ComboBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ContextMenuStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/CheckBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/TabPanelStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ToggleButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ToolTipStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/WindowStyles.xaml" />
+
+                <!-- DataTemplates -->
+                <ResourceDictionary Source="pack://application:,,,/UI/DataTemplates/CommonDataTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/DataTemplates/WallpapersDataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    
+</Application>

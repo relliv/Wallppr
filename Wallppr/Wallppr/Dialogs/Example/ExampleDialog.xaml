@@ -1,0 +1,28 @@
+﻿<dialog:DialogWindow x:Class="Wallppr.Dialogs.Example.ExampleDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wallppr.Dialogs.Example"
+        xmlns:dialog="clr-namespace:Wallppr.Dialogs" 
+        mc:Ignorable="d"
+        DataContext="{x:Null}">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type local:ExampleDialog}" BasedOn="{StaticResource BasicWindowBaseStyle}"/>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      CornerRadius="0" GlassFrameThickness="0"/>
+    </WindowChrome.WindowChrome>
+    
+    <Grid>
+        
+    </Grid>
+</dialog:DialogWindow>

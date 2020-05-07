@@ -1,0 +1,212 @@
+﻿<Page x:Class="Wallppr.UI.Pages.ExamplePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Wallppr.UI.Pages"
+      mc:Ignorable="d" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <TabControl>
+        <TabItem Header="Tab A"
+                 Tag="{Binding Source={StaticResource PlaylistPlay}, Path=Data}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Margin="0 10 20 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Search -->
+                    <TextBox Text="{Binding SearchTerm}"
+                                     Tag="Kanal Ara"
+                                     Height="35"
+                                     Margin="10 0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="KeyUp">
+                                <i:InvokeCommandAction Command="{Binding SearchChangedCommand}" 
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+
+                    <!-- Page limit -->
+                    <ComboBox Grid.Column="1" 
+                              VerticalAlignment="Center" 
+                              SelectedItem="{Binding PageLimit}"
+                              Height="35"
+                              Margin="10 0 20 0">
+                        <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type system:Int32}">
+                                <system:Int32>24</system:Int32>
+                                <system:Int32>50</system:Int32>
+                                <system:Int32>75</system:Int32>
+                                <system:Int32>100</system:Int32>
+                                <system:Int32>150</system:Int32>
+                                <system:Int32>200</system:Int32>
+                                <system:Int32>250</system:Int32>
+                                <system:Int32>300</system:Int32>
+                                <system:Int32>500</system:Int32>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding PaginationChangedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+
+                    <!-- Add Channel -->
+                    <Button Grid.Column="2"
+                            Height="35"
+                            Margin="0 0 15 0"
+                            Content="Kanal Ekle"
+                            Tag="{Binding Source={StaticResource Plus}, Path=Data}" 
+                            Style="{StaticResource LeftIconButtonStyle}"
+                            Command="{Binding AddTvChannelCommand}"
+                            ToolTip="Yeni Bir Kanal Ekle"/>
+                </Grid>
+
+                <!-- List Items -->
+                <ListView x:Name="TvChannels" Grid.Row="1" Grid.ColumnSpan="2" 
+                          Margin="0 10 0 0"
+                          ItemTemplate="{StaticResource TvChannelItemDataTemplate}" 
+                          ItemsSource="{Binding TvChannels}"
+                          VerticalAlignment="Top"
+                          ScrollViewer.CanContentScroll="False">
+                </ListView>
+
+                <!-- Pagination -->
+                <Grid Grid.Row="2" Margin="0 5 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Page Navigation -->
+                    <ListView ItemsSource="{Binding Pagination.Pages}"
+                              ItemTemplate="{StaticResource PaginationItemDataTemplate}"
+                              Visibility="{Binding ElementName=FavoriteTvChannels, Path=HasItems,
+                                           Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- Result Counts -->
+                    <TextBlock Grid.Column="1"
+                               Foreground="{StaticResource Teal700Brush}"
+                               VerticalAlignment="Center"
+                               Margin="20 0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} içerikten {1} tanesi listelendi">
+                                <Binding Path="Pagination.TotalItems"/>
+                                <Binding ElementName="TvChannels" Path="Items.Count"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Tab B" 
+                 Tag="{Binding Source={StaticResource PlaylistStar}, Path=Data}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Margin="0 10 20 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding FavoriteSearchTerm}"
+                                     Tag="Kanal Ara"
+                                     Height="35"
+                                     Margin="10 0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="KeyUp">
+                                <i:InvokeCommandAction Command="{Binding SearchFavoriteChangedCommand}" 
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBox}}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+
+                    <!-- Page limit -->
+                    <ComboBox Grid.Column="1" 
+                              VerticalAlignment="Center" 
+                              SelectedItem="{Binding FavoritePageLimit}"
+                              Height="35"
+                              Margin="10 0">
+                        <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type system:Int32}">
+                                <system:Int32>24</system:Int32>
+                                <system:Int32>50</system:Int32>
+                                <system:Int32>75</system:Int32>
+                                <system:Int32>100</system:Int32>
+                                <system:Int32>150</system:Int32>
+                                <system:Int32>200</system:Int32>
+                                <system:Int32>250</system:Int32>
+                                <system:Int32>300</system:Int32>
+                                <system:Int32>500</system:Int32>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding PaginationFavoriteChangedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
+
+                <!-- List Items -->
+                <ListView x:Name="FavoriteTvChannels" Grid.Row="1" Grid.ColumnSpan="2" 
+                          Margin="0 10 0 0"
+                          ItemTemplate="{StaticResource TvChannelItemDataTemplate}" 
+                          ItemsSource="{Binding FavoriteTvChannels}"
+                          VerticalAlignment="Top"
+                          ScrollViewer.CanContentScroll="False">
+                </ListView>
+
+                <!-- Pagination -->
+                <Grid Grid.Row="2" Margin="0 5 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Page Navigation -->
+                    <ListView ItemsSource="{Binding FavoritePagination.Pages}"
+                              ItemTemplate="{StaticResource PaginationItemDataTemplate}"
+                              Visibility="{Binding ElementName=FavoriteTvChannels, Path=HasItems,
+                                           Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- Result Counts -->
+                    <TextBlock Grid.Column="1"
+                               Foreground="{StaticResource Teal700Brush}"
+                               VerticalAlignment="Center"
+                               Margin="20 0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} içerikten {1} tanesi listelendi">
+                                <Binding Path="FavoritePagination.TotalItems"/>
+                                <Binding ElementName="FavoriteTvChannels" Path="Items.Count"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+
+</Page>

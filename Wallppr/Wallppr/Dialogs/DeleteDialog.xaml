@@ -1,0 +1,43 @@
+﻿<local:DialogWindow x:Class="Wallppr.Dialogs.DeleteDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wallppr.Dialogs"
+        mc:Ignorable="d"
+        DataContext="{x:Null}">
+    <Window.Resources>
+        <Style TargetType="{x:Type local:DeleteDialog}" BasedOn="{StaticResource BasicWindowBaseStyle}"/>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      CornerRadius="0" GlassFrameThickness="0"/>
+    </WindowChrome.WindowChrome>
+
+    <StackPanel Orientation="Vertical" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+        <TextBlock Text="{Binding ItemTitle, StringFormat='Are you sure to delete: {0}', FallbackValue=Item Title Fallback Value...}"
+                   TextAlignment="Center"
+                   TextWrapping="WrapWithOverflow"
+                   FontSize="20"/>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Style="{StaticResource LeftIconRedButtonStyle}"
+                    Content="Delete" Margin="50"
+                    Tag="{Binding Source={StaticResource DeleteEmptyOutline}, Path=Data}"
+                    Command="{Binding DeleteCommand}"/>
+
+            <Button Style="{StaticResource LeftIconButtonStyle}"
+                    Content="Cancel" Margin="50"
+                    Tag="{Binding Source={StaticResource Close}, Path=Data}"
+                    Command="{Binding CloseCommand}"/>
+        </StackPanel>
+    </StackPanel>
+</local:DialogWindow>
