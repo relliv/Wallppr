@@ -66,8 +66,7 @@ namespace Wallppr.ViewModel.App
                     var lastVersion = lastRelease.TagName.Replace("v", null);
 
                     var version1 = new Version(Settings.AppVersion);
-                    //var version2 = new Version(lastVersion);
-                    var version2 = new Version("0.0.3");
+                    var version2 = new Version(lastVersion);
 
                     if (version1.CompareTo(version2) < 0)
                     {
