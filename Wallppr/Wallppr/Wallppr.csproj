@@ -359,9 +359,6 @@
     <Compile Include="UI\Pages\DesktopWallpapers.xaml.cs">
       <DependentUpon>DesktopWallpapers.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Pages\DesktopWallpprs.xaml.cs">
-      <DependentUpon>DesktopWallpprs.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\Pages\ExamplePage.xaml.cs">
       <DependentUpon>ExamplePage.xaml</DependentUpon>
     </Compile>
@@ -471,10 +468,6 @@
     <Page Include="UI\Pages\DesktopWallpapers.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Pages\DesktopWallpprs.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\ExamplePage.xaml">
       <SubType>Designer</SubType>

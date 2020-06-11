@@ -70,8 +70,6 @@ namespace Wallppr.ViewModel.App
 
             if (ViewModelApplication.CurrentPage != navbarItem.ApplicationPage)
             {
-                ViewModelApplication.TempWallpapers = null;
-                ViewModelApplication.TempPagination = null;
                 ViewModelApplication.BackToButtonVisibility = Visibility.Hidden;
 
                 SetIsChecked(navbarItem.ApplicationPage);
