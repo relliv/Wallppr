@@ -1,0 +1,45 @@
+﻿<Window x:Class="Wallppr.UI.Controls.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wallppr.UI.Controls"
+        xmlns:li="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF" 
+        mc:Ignorable="d"
+        WindowStyle="None" Background="{StaticResource ThemeColor2Brush}"
+        Height="500" Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="Wallppr">
+
+    <Grid HorizontalAlignment="Center"
+          VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- App Navbar Logo -->
+        <Border BorderBrush="{StaticResource ThemeColor5Brush}"
+                BorderThickness="0 0 0 1"
+                Padding="0 0 0 20">
+            <StackPanel Orientation="Horizontal" Margin="20 0">
+                <Image Height="70" 
+                   Source="pack://application:,,,/Resources/squares.ico"
+                   Stretch="Uniform">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="#000" 
+                                      Opacity=".05" ShadowDepth="5" Direction="0"/>
+                    </Image.Effect>
+                </Image>
+
+                <TextBlock Text="Wallppr"
+                       Foreground="{StaticResource ThemeColor5Brush}"
+                       FontSize="30"
+                       FontWeight="Light"
+                       Margin="15 0"
+                       VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -12,7 +12,7 @@
     <!--#region Wallpapers -->
 
     <ContextMenu x:Key="WallpaperItemContextMenu">
-        <MenuItem Header="Set As Background"
+        <MenuItem Header="{DynamicResource SetAsBackground}"
                   Command="{Binding PlacementTarget.Tag.SetAsCommand, 
                                         RelativeSource={RelativeSource Mode=FindAncestor, 
                                         AncestorType={x:Type ContextMenu}}}"
@@ -29,7 +29,7 @@
                       Data="{Binding Source={StaticResource FlipToBack}, Path=Data}"/>
             </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Save As"
+        <MenuItem Header="{DynamicResource SaveAs}"
                   Command="{Binding PlacementTarget.Tag.SetAsCommand, 
                                         RelativeSource={RelativeSource Mode=FindAncestor, 
                                         AncestorType={x:Type ContextMenu}}}"
@@ -46,7 +46,7 @@
                       Data="{Binding Source={StaticResource ContentSaveSettingsOutline}, Path=Data}"/>
             </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Download"
+        <MenuItem Header="{DynamicResource Download}"
                   Command="{Binding PlacementTarget.Tag.SetAsCommand, 
                                     RelativeSource={RelativeSource Mode=FindAncestor, 
                                     AncestorType={x:Type ContextMenu}}}"
@@ -64,7 +64,7 @@
                       Data="{Binding Source={StaticResource DownloadOutline}, Path=Data}"/>
             </MenuItem.Icon>
         </MenuItem>
-        <MenuItem Header="Remove from My List"
+        <MenuItem Header="{StaticResource RemoveFromMyList}"
                   Command="{Binding PlacementTarget.Tag.SetAsCommand, 
                                     RelativeSource={RelativeSource Mode=FindAncestor, 
                                     AncestorType={x:Type ContextMenu}}}"
@@ -149,7 +149,7 @@
                                                       Style="{StaticResource StarCheckBox}"
                                                       IsChecked="{Binding IsFavorite}"
                                                       VerticalAlignment="Center"
-                                                      ToolTip="Add to Favorites">
+                                                      ToolTip="{DynamicResource AddtoFavorites}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <i:InvokeCommandAction Command="{Binding DataContext.SetFavoriteWallpaperCommand, 
@@ -160,7 +160,8 @@
                                                 </i:Interaction.Triggers>
                                             </CheckBox>
 
-                                            <TextBlock Text="SAVED"
+                                            <TextBlock Text="{DynamicResource Saved}"
+                                                       Typography.Capitals="AllSmallCaps"
                                                        Foreground="{StaticResource ThemeColor5Brush}"
                                                        Visibility="{Binding Id, Converter={StaticResource HasIdToVisibilityConverter}}"/>
                                         </StackPanel>
@@ -243,7 +244,7 @@
                                             <CheckBox Margin="3 10 0 10"
                                                       Style="{StaticResource StarCheckBox}"
                                                       IsChecked="{Binding IsFavorite}"
-                                                      ToolTip="Add to Favorites">
+                                                      ToolTip="{DynamicResource AddtoFavorites}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <i:InvokeCommandAction Command="{Binding DataContext.SetFavoriteWallpaperCommand, 
@@ -254,7 +255,8 @@
                                                 </i:Interaction.Triggers>
                                             </CheckBox>
 
-                                            <TextBlock Text="SAVED"
+                                            <TextBlock Text="{DynamicResource Saved}"
+                                                       Typography.Capitals="AllSmallCaps"
                                                        Foreground="{StaticResource ThemeColor5Brush}"
                                                        Visibility="{Binding Id, Converter={StaticResource HasIdToVisibilityConverter}}"/>
                                         </StackPanel>
@@ -338,7 +340,7 @@
                                                       Style="{StaticResource StarCheckBox}"
                                                       IsChecked="{Binding IsFavorite}"
                                                       HorizontalAlignment="Center"
-                                                      ToolTip="Add to Favorites">
+                                                      ToolTip="{DynamicResource AddtoFavorites}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="Click">
                                                         <i:InvokeCommandAction Command="{Binding DataContext.SetFavoriteWallpaperCommand, 
@@ -392,6 +394,8 @@
                     <Setter Property="Margin" Value="0"/>
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                           AncestorType={x:Type ComboBox}}, Path=Data}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -426,9 +430,16 @@
                 <i:EventTrigger EventName="Checked">
                     <i:InvokeCommandAction Command="{Binding DataContext.ResolutionChangedCommand, 
                                                              RelativeSource={RelativeSource Mode=FindAncestor, 
-                                                             AncestorType={x:Type pages:BasePage}}}" 
-                                               CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                                                                  AncestorType={x:Type ToggleButton}}, Path=DataContext}"/>
+                                                             AncestorType={x:Type pages:BasePage}}}">
+                        <i:InvokeCommandAction.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                <Binding Path="DataContext" RelativeSource="{RelativeSource Mode=FindAncestor, 
+                                                            AncestorType={x:Type ToggleButton}}"/>
+                                <Binding Path="Tag" RelativeSource="{RelativeSource Mode=FindAncestor, 
+                                                    AncestorType={x:Type ComboBox}}"/>
+                            </MultiBinding>
+                        </i:InvokeCommandAction.CommandParameter>
+                    </i:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ToggleButton>

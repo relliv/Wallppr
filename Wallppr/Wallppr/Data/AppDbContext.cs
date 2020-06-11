@@ -18,9 +18,25 @@ namespace Wallppr.Data
         {
             if (!Database.EnsureCreated()) return;
 
+            AppSettings.Add(new AppSetting
+            {
+                SettingName = "CurrentLang",
+                Value = "en-Us",
+                IsEditable = false,
+                DefaultValue = "en-Us"
+            });
+
+            AppSettings.Add(new AppSetting
+            {
+                SettingName = "IsAppConfigured",
+                Value = "0",
+                IsEditable = false,
+                DefaultValue = "0"
+            });
+
             AppSettings.Add(new AppSetting 
             { 
-                SettingName = "DesktopWallpaperResolution",
+                SettingName = "DesktopRandomWallpaperResolution",
                 Value = "1920x1080",
                 IsEditable = true,
                 DefaultValue = "1920x1080"
@@ -28,7 +44,23 @@ namespace Wallppr.Data
 
             AppSettings.Add(new AppSetting
             {
-                SettingName = "MobileWallpaperResolution",
+                SettingName = "DesktopLastestWallpaperResolution",
+                Value = "1920x1080",
+                IsEditable = true,
+                DefaultValue = "1920x1080"
+            });
+
+            AppSettings.Add(new AppSetting
+            {
+                SettingName = "MobileRandomWallpaperResolution",
+                Value = "1080x1920",
+                IsEditable = true,
+                DefaultValue = "1080x1920"
+            });
+
+            AppSettings.Add(new AppSetting
+            {
+                SettingName = "MobileLatestWallpaperResolution",
                 Value = "1080x1920",
                 IsEditable = true,
                 DefaultValue = "1080x1920"
@@ -59,7 +91,7 @@ namespace Wallppr.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            optionsBuilder.UseSqlite("Data Source=Wallppr.db;");
+            optionsBuilder.UseSqlite($"Data Source={Settings.AppDatabaseFile};");
             base.OnConfiguring(optionsBuilder);
         }
 

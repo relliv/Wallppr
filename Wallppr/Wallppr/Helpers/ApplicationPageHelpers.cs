@@ -23,10 +23,12 @@ namespace Wallppr.Helpers
             {
                 case ApplicationPage.WelcomePage:
                     return new WelcomePage(viewModel as WelcomeViewModel);
+                case ApplicationPage.AppSettings:
+                    return new UI.Pages.AppSettings();
                 case ApplicationPage.DesktopWallpapers:
-                    return new DesktopWallpapers(viewModel as DesktopWallpapersViewModel);
+                    return new DesktopWallpapers();
                 case ApplicationPage.MobileWallpapers:
-                    return new MobileWallpapers(viewModel as MobileWallpapersViewModel);
+                    return new MobileWallpapers();
                 case ApplicationPage.MyWallpapers:
                     return new MyWallpapers(viewModel as MyWallpapersViewModel);
                 case ApplicationPage.Wallpaper:

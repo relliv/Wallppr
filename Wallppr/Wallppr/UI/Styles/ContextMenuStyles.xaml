@@ -9,7 +9,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Rectangle Height="{TemplateBinding Height}" Fill="White" />
+                    <Rectangle Height="{TemplateBinding Height}" Fill="{StaticResource ThemeColor2}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -17,18 +17,18 @@
 
     <!--Outer menu items-->
     <Style TargetType="{x:Type MenuItem}">
-        <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="Background" Value="{StaticResource ThemeColor2Brush}"/>
         <Setter Property="Opacity" Value=".95"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="{StaticResource WhiteBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ThemeColor2Brush}"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Foreground" Value="{StaticResource BlueGrey700Brush}" />
+        <Setter Property="Foreground" Value="{StaticResource BlueGrey300Brush}" />
         <Style.Triggers>
             <Trigger Property="IsHighlighted" Value="True">
                 <!--<Setter Property="Background" Value="Black"/>-->
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource ThemeColor2Brush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -42,8 +42,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                     <Border x:Name="Border" MinHeight="30"
-                            BorderThickness="1" BorderBrush="{StaticResource WhiteBrush}"
-                            Background="{StaticResource WhiteBrush}"
+                            BorderThickness="1" BorderBrush="{StaticResource ThemeColor3Brush}"
+                            Background="{StaticResource ThemeColor2Brush}"
                             Margin="3">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="5" Color="{StaticResource BlueGrey100}" Opacity=".3" ShadowDepth="0" Direction="0"/>
@@ -53,10 +53,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource WhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ThemeColor2Brush}" />
                             <Setter TargetName="Border" Property="Opacity" Value=".95"/>
 
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource WhiteBrush}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ThemeColor2Brush}"/>
                             <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -110,8 +110,8 @@
                        PopupAnimation="Fade">
                     <!-- Base Border-->
                     <Border Name="SubmenuBorder"
-                            SnapsToDevicePixels="True" Background="{StaticResource WhiteBrush}"
-                            BorderBrush="{StaticResource WhiteBrush}" BorderThickness="1">
+                            SnapsToDevicePixels="True" Background="{StaticResource ThemeColor2Brush}"
+                            BorderBrush="{StaticResource ThemeColor2Brush}" BorderThickness="1">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </Border>
                 </Popup>
@@ -125,12 +125,12 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource SnowWhiteBrush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource ThemeColor2Brush}" />
             </Trigger>
             <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="True">
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{StaticResource BlueGrey500Brush}" />
+                <Setter Property="Foreground" Value="{StaticResource BlueGrey300Brush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -157,12 +157,12 @@
                 <!-- #0 Check Mark (IsCheckable) -->
                 <Grid>
                     <Border Width="13" Height="13" Visibility="Collapsed" Margin="6,0,6,0" 
-                            Background="{StaticResource WhiteBrush}" BorderThickness="1" 
-                            BorderBrush="{StaticResource WhiteBrush}"/>
+                            Background="{StaticResource ThemeColor2Brush}" BorderThickness="1" 
+                            BorderBrush="{StaticResource ThemeColor2Brush}"/>
                     <Border Name="Check" Width="13" Height="13" Visibility="Collapsed" Margin="6,0,6,0">
                         <Path Name="CheckMark" Width="7" Height="7"
                               Visibility="Hidden" SnapsToDevicePixels="False"
-                              Stroke="{StaticResource BlueGrey800Brush}" StrokeThickness="2"
+                              Stroke="{StaticResource BlueGrey500Brush}" StrokeThickness="2"
                               Data="M 0 0 L 7 7 M 0 7 L 7 0" />
                     </Border>
                 </Grid>
@@ -189,7 +189,7 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Hidden" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource BlueGrey100Brush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource ThemeColor3Brush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="{StaticResource BlueGrey50Brush}" />

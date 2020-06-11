@@ -12,6 +12,8 @@ using System.Windows.Input;
 using Wallppr.Data;
 using Wallppr.Helpers;
 using Wallppr.Models.Common;
+using Wallppr.Models.Wallpaper.Enums;
+using Wallppr.UI.i18N;
 using static Wallppr.DI.DI;
 
 namespace Wallppr.ViewModel.Wallpaper
@@ -20,14 +22,16 @@ namespace Wallppr.ViewModel.Wallpaper
     {
         public MyWallpapersViewModel()
         {
+            TabSelectionChangedCommand = new RelayParameterizedCommand(TabSelectionChanged);
             GoToPageCommand = new RelayParameterizedCommand(GoToPage);
             ShowWallpaperCommand = new RelayParameterizedCommand(ShowWallpaper);
             SetAsCommand = new RelayParameterizedCommand(SetAs);
             SetFavoriteWallpaperCommand = new RelayParameterizedCommand(SetFavoriteWallpaper);
 
-            Wallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+            DesktopWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+            MobileWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
 
-            LoadWallpapers();
+            LoadDesktopWallpapers();
         }
 
         #region Commands
@@ -36,22 +40,36 @@ namespace Wallppr.ViewModel.Wallpaper
         public ICommand SetFavoriteWallpaperCommand { get; set; }
         public ICommand GoToPageCommand { get; set; }
         public ICommand ShowWallpaperCommand { get; set; }
+        public ICommand TabSelectionChangedCommand { get; set; }
 
         #endregion
 
 
         #region Public Properties
 
-        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> Wallpapers { get; set; }
+        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> DesktopWallpapers { get; set; }
+        public Visibility DesktopWallpapersLIVisibility { get; set; }
+
+        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> MobileWallpapers { get; set; }
+        public Visibility MobileWallpapersLIVisibility { get; set; }
 
         #endregion
 
-        #region Pagination
+        #region Desktop Pagination
 
-        public Pagination Pagination { get; set; }
-        public int PageLimit { get; set; } = 40;
-        public int CurrentPage { get; set; } = 1;
-        public string SearchTerm { get; set; }
+        public Pagination DesktopPagination { get; set; }
+        public int DesktopPageLimit { get; set; } = 40;
+        public int DesktopCurrentPage { get; set; } = 1;
+        public string DesktopSearchTerm { get; set; }
+
+        #endregion
+
+        #region Mobile Pagination
+
+        public Pagination MobilePagination { get; set; }
+        public int MobilePageLimit { get; set; } = 40;
+        public int MobileCurrentPage { get; set; } = 1;
+        public string MobileSearchTerm { get; set; }
 
         #endregion
 
@@ -59,56 +77,138 @@ namespace Wallppr.ViewModel.Wallpaper
         #region Methods
 
         /// <summary>
-        /// Load saved wallpapers
+        /// Load saved desktop wallpapers
         /// </summary>
-        public void LoadWallpapers()
+        public void LoadDesktopWallpapers()
         {
-            using var db = new AppDbContext();
-
-            var totalSize = db.Wallpapers
-            .Count();
-            totalSize = totalSize > 0 ? totalSize : 1;
-
-            Pagination = new Pagination(totalSize, CurrentPage, PageLimit, 10);
-
-            Wallpapers = db.Wallpapers
-            .Select(x => new Models.Wallpaper.Entities.Wallpaper
+            new Task(async () => 
             {
-                Id = x.Id,
-                UId = x.UId,
-                Path = x.Path,
-                Thumbnail = x.Thumbnail,
-                DimensionX = x.DimensionX,
-                DimensionY = x.DimensionY,
-                IsFavorite = x.IsFavorite,
-                WallpaperUrl = x.WallpaperUrl,
-                WallpaperThumbUrl = x.WallpaperThumbUrl,
-                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                .ToObservableCollection()
-            })
-            .OrderBy(x => x.Id)
-            .Skip((CurrentPage - 1) * PageLimit)
-            .Take(PageLimit)
-            .ToObservableCollection();
+                DesktopWallpapersLIVisibility = Visibility.Visible;
 
-            Pagination = new Pagination(totalSize, CurrentPage, PageLimit, 10);
+                await Task.Delay(700);
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    using var db = new AppDbContext();
+
+                    var totalSize = db.Wallpapers
+                    .Where(x => x.WallpaperType == WallpaperType.Desktop)
+                    .Count();
+
+                    totalSize = totalSize > 0 ? totalSize : 1;
+
+                    DesktopPagination = new Pagination(totalSize, DesktopCurrentPage, DesktopPageLimit, 10);
+
+                    DesktopWallpapers = db.Wallpapers
+                    .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                    {
+                        Id = x.Id,
+                        UId = x.UId,
+                        Path = x.Path,
+                        Thumbnail = x.Thumbnail,
+                        DimensionX = x.DimensionX,
+                        DimensionY = x.DimensionY,
+                        IsFavorite = x.IsFavorite,
+                        WallpaperUrl = x.WallpaperUrl,
+                        WallpaperThumbUrl = x.WallpaperThumbUrl,
+                        WallpaperType = x.WallpaperType,
+                        ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                        .ToObservableCollection()
+                    })
+                    .Where(x => x.WallpaperType == WallpaperType.Desktop)
+                    .OrderByDescending(x => x.AddedDate)
+                    .Skip((DesktopCurrentPage - 1) * DesktopPageLimit)
+                    .Take(DesktopPageLimit)
+                    .ToObservableCollection();
+
+                    DesktopPagination = new Pagination(totalSize, DesktopCurrentPage, DesktopPageLimit, 10);
+
+                    DesktopWallpapersLIVisibility = Visibility.Hidden;
+                });
+            }).Start();
         }
 
+        /// <summary>
+        /// Load saved mobile wallpapers
+        /// </summary>
+        public void LoadMobileWallpapers()
+        {
+            new Task(async () =>
+            {
+                MobileWallpapersLIVisibility = Visibility.Visible;
+
+                await Task.Delay(700);
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    using var db = new AppDbContext();
+
+                    var totalSize = db.Wallpapers
+                    .Where(x => x.WallpaperType == WallpaperType.Mobile)
+                    .Count();
+
+                    totalSize = totalSize > 0 ? totalSize : 1;
+
+                    MobilePagination = new Pagination(totalSize, MobileCurrentPage, MobilePageLimit, 10);
+
+                    MobileWallpapers = db.Wallpapers
+                    .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                    {
+                        Id = x.Id,
+                        UId = x.UId,
+                        Path = x.Path,
+                        Thumbnail = x.Thumbnail,
+                        DimensionX = x.DimensionX,
+                        DimensionY = x.DimensionY,
+                        IsFavorite = x.IsFavorite,
+                        WallpaperUrl = x.WallpaperUrl,
+                        WallpaperThumbUrl = x.WallpaperThumbUrl,
+                        WallpaperType = x.WallpaperType,
+                        ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                        .ToObservableCollection()
+                    })
+                    .Where(x => x.WallpaperType == WallpaperType.Mobile)
+                    .OrderByDescending(x => x.AddedDate)
+                    .Skip((MobileCurrentPage - 1) * MobilePageLimit)
+                    .Take(MobilePageLimit)
+                    .ToObservableCollection();
+
+                    System.Diagnostics.Debug.WriteLine(MobileWallpapers.Count);
+                    MobilePagination = new Pagination(totalSize, MobileCurrentPage, MobilePageLimit, 10);
+
+                    MobileWallpapersLIVisibility = Visibility.Hidden;
+                });
+            }).Start();
+        }
         #endregion
 
 
         #region Command Methods
 
         /// <summary>
-        /// Go to selected page
+        /// Tab selection changed
+        /// </summary>
+        /// <param name="sender"></param>
+        public void TabSelectionChanged(object sender)
+        {
+            var tabIndex = (int)sender;
+
+            if (tabIndex == 1 && (MobileWallpapers == null || MobileWallpapers.Count <= 0))
+            {
+                LoadMobileWallpapers();
+            }
+        }
+
+        /// <summary>
+        /// Go to selected page for desktop wallpapers
         /// </summary>
         /// <param name="sender"></param>
         public void GoToPage(object sender)
         {
             var page = (Models.Common.Page)sender;
 
-            CurrentPage = page.PageNumber;
-            LoadWallpapers();
+            DesktopCurrentPage = page.PageNumber;
+            LoadDesktopWallpapers();
         }
 
         /// <summary>
@@ -120,8 +220,8 @@ namespace Wallppr.ViewModel.Wallpaper
             var wallpaper = (Models.Wallpaper.Entities.Wallpaper)sender;
 
             ViewModelApplication.SelectedWallpaper = wallpaper;
-            ViewModelApplication.TempWallpapers = Wallpapers;
-            ViewModelApplication.TempPagination = Pagination;
+            //ViewModelApplication.TempWallpapers = Wallpapers;
+            //ViewModelApplication.TempPagination = DesktopPagination;
             ViewModelApplication.BackToButtonVisibility = Visibility.Visible;
             ViewModelApplication.PreviousPage = ApplicationPage.MyWallpapers;
 
@@ -147,7 +247,7 @@ namespace Wallppr.ViewModel.Wallpaper
             {
                 var folderBrowserDialog = new FolderBrowserDialog
                 {
-                    Description = "Select Save Destination",
+                    Description = ViewModelApplication.LanguageResourceDictionary["SelectSaveDestination"].ToString(),
                     RootFolder = Environment.SpecialFolder.Desktop
                 };
 
@@ -172,7 +272,14 @@ namespace Wallppr.ViewModel.Wallpaper
                 db.Wallpapers.Remove(wallpaper);
                 db.SaveChanges();
 
-                Wallpapers.Remove(wallpaper);
+                if (wallpaper.WallpaperType == WallpaperType.Desktop)
+                {
+                    DesktopWallpapers.Remove(wallpaper);
+                }
+                else if (wallpaper.WallpaperType == WallpaperType.Mobile)
+                {
+                    MobileWallpapers.Remove(wallpaper);
+                }
             }
         }
 

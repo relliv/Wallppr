@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using Wallppr.UI.i18N;
+using Wallppr.Helpers;
+using KOR.ReleaseCheck;
 
 namespace Wallppr.Data
 {
@@ -11,14 +14,18 @@ namespace Wallppr.Data
     {
         public Setup()
         {
+            var userAppFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
             ResourceDirectories = new List<string>
             {
-                @$"{Settings.CurrentDirectory}\Wallpapers",
-                @$"{Settings.CurrentDirectory}\Wallpapers\Mobile",
-                @$"{Settings.CurrentDirectory}\Thumbnails"
+                Settings.WallpaperDesktopFolder,
+                Settings.WallpaperMobileFolder,
+                Settings.WallpaperThumbnailsFolder
             };
 
             CheckResourcesFolder();
+            ConfitureApp();
+            SetupLanguage();
         }
 
         public List<string> ResourceDirectories { get; set; }
@@ -35,6 +42,29 @@ namespace Wallppr.Data
                     }
                 }
             }
+        }
+
+        public void ConfitureApp()
+        {
+            using var db = new AppDbContext();
+
+            var isConfiguredSetting = db.AppSettings.Where(x => x.SettingName == "IsAppConfigured").FirstOrDefault();
+
+            if (int.Parse(isConfiguredSetting.Value) == 0)
+            {
+                var availableLangs = i18N.GetAvailableLangauges();
+                var currentLang = Thread.CurrentThread.CurrentCulture.Name;
+
+                if (availableLangs.Contains(currentLang))
+                {
+                    i18N.SwitchCurrentLanguage(currentLang);
+                }
+            }
+        }
+
+        public void SetupLanguage()
+        {
+            i18N.LoadCurrentLanguage();
         }
 
     }

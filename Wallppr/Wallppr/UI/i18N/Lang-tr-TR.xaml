@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="NoData">Veri Yok</system:String>
+    <system:String x:Key="Mobile">Mobil</system:String>
+    <system:String x:Key="Desktop">Masaüstü</system:String>
+    <system:String x:Key="MobileWallpapers">Mobil Duvar Kağıtları</system:String>
+    <system:String x:Key="DesktopWallpapers">Masaüstü Duvar Kağıtları</system:String>
+    <system:String x:Key="MyWallpapers">Duvar Kağıtlarım</system:String>
+    <system:String x:Key="LatestWallpapers">En Son</system:String>
+    <system:String x:Key="RandomWallpapers">Rastgele</system:String>
+    <system:String x:Key="SelectSaveDestination">Kayıt Konumunu Seçiniz</system:String>
+    <system:String x:Key="SetAsBackground">Arkaplan Olarak Ayarla</system:String>
+    <system:String x:Key="SaveAs">Farklı Kaydet</system:String>
+    <system:String x:Key="Download">İndir</system:String>
+    <system:String x:Key="Downloading">indiriliyor...</system:String>
+    <system:String x:Key="Loading">Yükleniyor...</system:String>
+    <system:String x:Key="RemoveFromMyList">Listemden Kaldır</system:String>
+    <system:String x:Key="Saved">Kaydedildi</system:String>
+    <system:String x:Key="AddtoFavorites">Favorilere Ekle</system:String>
+    <system:String x:Key="Error">Hata!</system:String>
+    <system:String x:Key="Info">Bilgi:</system:String>
+    <system:String x:Key="AvailableLanguages">Mevcut Diller:</system:String>
+    <system:String x:Key="LanguageChangeMessage">Bazı ayarlar uygulamayı yeniden başlatmanızı gerektirebilir.</system:String>
+    <system:String x:Key="Update">Güncelleme:</system:String>
+    <system:String x:Key="ThereIsNewerVersion">Yeni bir versiyon var. Uygulamayı güncellemek istiyor musun?</system:String>
+</ResourceDictionary>

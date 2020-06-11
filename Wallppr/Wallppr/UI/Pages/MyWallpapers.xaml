@@ -5,48 +5,137 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wallppr.UI.Pages"
       xmlns:viewmodel="clr-namespace:Wallppr.ViewModel.Wallpaper"
-      mc:Ignorable="d">
+      xmlns:li="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d"
+      DataContext="{Binding MyWallpapersVM, Source={StaticResource Locator}}">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <TabControl Padding="0" Margin="0 0 10 0">
+        <!-- Desktop Wallpapers #0 -->
+        <TabItem Header="{DynamicResource Desktop}" 
+                 Tag="{Binding Source={StaticResource Wallpaper}, Path=Data}">
+            <Grid>
+                <!-- Loading Indicator -->
+                <li:LoadingIndicator SpeedRatio="1" 
+                                     Margin="20"
+                                     Foreground="{StaticResource ThemeColor4Brush}"
+                                     Style="{StaticResource LoadingIndicatorPulseStyleKey}"
+                                     Visibility="{Binding DesktopWallpapersLIVisibility, FallbackValue=Hidden}"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"/>
 
-        <!-- List Items -->
-        <ListView x:Name="Wallpapers" Grid.Row="1"
-                  Margin="0 10 0 0"
-                  ItemTemplate="{StaticResource MyWallpaperItemDataTemplate}" 
-                  ItemsSource="{Binding Wallpapers}"
-                  VerticalAlignment="Top"
-                  ScrollViewer.CanContentScroll="False"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-        <!-- Pagination -->
-        <Grid Grid.Row="2" Margin="0 5 0 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                    <!-- List Items -->
+                    <ListView x:Name="DesktopWallpapers" Grid.Row="1"
+                              Margin="0 10 0 0"
+                              ItemTemplate="{StaticResource MyWallpaperItemDataTemplate}" 
+                              ItemsSource="{Binding DesktopWallpapers}"
+                              VerticalAlignment="Top"
+                              ScrollViewer.CanContentScroll="False"
+                              Tag="{DynamicResource NoData}"/>
 
-            <!-- Page Navigation -->
-            <ListView ItemsSource="{Binding Pagination.Pages}"
-                      ItemTemplate="{StaticResource PaginationItemDataTemplate}"
-                      Visibility="{Binding ElementName=Wallpapers, Path=HasItems,
-                                   Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <!-- Pagination -->
+                    <Grid Grid.Row="2" Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-            <!-- Result Counts -->
-            <TextBlock Grid.Column="1"
-                       Foreground="{StaticResource Teal700Brush}"
-                       VerticalAlignment="Center"
-                       Margin="20 0">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{1} of {0}">
-                        <Binding Path="Pagination.TotalItems"/>
-                        <Binding ElementName="Wallpapers" Path="Items.Count"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-        </Grid>
-    </Grid>
+                        <!-- Page Navigation -->
+                        <ListView ItemsSource="{Binding DesktopPagination.Pages}"
+                                  ItemTemplate="{StaticResource PaginationItemDataTemplate}"
+                                  Visibility="{Binding ElementName=DesktopWallpapers, Path=HasItems,
+                                               Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                        <!-- Result Counts -->
+                        <TextBlock Grid.Column="1"
+                                   Foreground="{StaticResource Teal700Brush}"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{1} / {0}">
+                                    <Binding Path="DesktopPagination.TotalItems"/>
+                                    <Binding ElementName="DesktopWallpapers" Path="Items.Count"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </TabItem>
+
+        <!-- Mobile Wallpapers #1 -->
+        <TabItem Header="{DynamicResource Mobile}" 
+                 Tag="{Binding Source={StaticResource SmartCardOutline}, Path=Data}">
+            <Grid>
+                <!-- Loading Indicator -->
+                <li:LoadingIndicator SpeedRatio="1" 
+                                     Margin="20"
+                                     Foreground="{StaticResource ThemeColor4Brush}"
+                                     Style="{StaticResource LoadingIndicatorPulseStyleKey}"
+                                     Visibility="{Binding MobileWallpapersLIVisibility, FallbackValue=Hidden}"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"/>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- List Items -->
+                    <ListView x:Name="MobileWallpapers" Grid.Row="1"
+                              Margin="0 10 0 0"
+                              ItemTemplate="{StaticResource MyWallpaperItemDataTemplate}" 
+                              ItemsSource="{Binding MobileWallpapers}"
+                              VerticalAlignment="Top"
+                              ScrollViewer.CanContentScroll="False"
+                              Tag="{DynamicResource NoData}"/>
+
+                    <!-- Pagination -->
+                    <Grid Grid.Row="2" Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Page Navigation -->
+                        <ListView ItemsSource="{Binding DesktopPagination.Pages}"
+                                  ItemTemplate="{StaticResource PaginationItemDataTemplate}"
+                                  Visibility="{Binding ElementName=MobileWallpapers, Path=HasItems,
+                                               Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                        <!-- Result Counts -->
+                        <TextBlock Grid.Column="1"
+                                   Foreground="{StaticResource Teal700Brush}"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{1} / {0}">
+                                    <Binding Path="MobilePagination.TotalItems"/>
+                                    <Binding ElementName="MobileWallpapers" Path="Items.Count"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </TabItem>
+        
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectionChanged">
+                <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" 
+                                       CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                          AncestorType={x:Type TabControl}}, Path=SelectedIndex}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+    </TabControl>
+
 </local:BasePage>

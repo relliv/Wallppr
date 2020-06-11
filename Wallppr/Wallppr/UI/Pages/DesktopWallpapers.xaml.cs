@@ -11,10 +11,5 @@ namespace Wallppr.UI.Pages
         {
             InitializeComponent();
         }
-
-        public DesktopWallpapers(DesktopWallpapersViewModel vm) : base(vm)
-        {
-            InitializeComponent();
-        }
     }
 }

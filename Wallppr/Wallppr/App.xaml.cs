@@ -9,6 +9,8 @@ using Wallppr.Dialogs;
 using Wallppr.ViewModel;
 using static Wallppr.DI.DI;
 using System.Diagnostics;
+using Wallppr.UI.Controls;
+using Wallppr.ViewModel.App;
 
 namespace Wallppr
 {
@@ -24,6 +26,9 @@ namespace Wallppr
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            var splashScreen = new UI.Controls.SplashScreen();
+            splashScreen.Show();
+
             base.OnStartup(e);
 
             _ = new AppDbContext();
@@ -34,6 +39,10 @@ namespace Wallppr
             ViewModelApplication.GoToPage(ApplicationPage.DesktopWallpapers);
 
             Current.MainWindow = new MainWindow();
+            Current.MainWindow.Loaded += (s, e) =>
+            {
+                splashScreen.Close();
+            };
             Current.MainWindow.DataContext = new WindowViewModel(Current.MainWindow);
             Current.MainWindow.Show();
         }
@@ -48,8 +57,9 @@ namespace Wallppr
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
+            args.Handled = true;
             var dialog = new MessageDialog();
-            //dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: Application_DispatcherUnhandledException", args.Exception.ToString()));
+            dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: Application_DispatcherUnhandledException", args.Exception.ToString()));
 
             Debug.WriteLine(args.Exception.ToString(), "Error: Application_DispatcherUnhandledException");
 
@@ -59,15 +69,16 @@ namespace Wallppr
         private void TaskSchedulerOnUnobservedTaskException(UnobservedTaskExceptionEventArgs args)
         {
             var dialog = new MessageDialog();
-            //dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: TaskSchedulerOnUnobservedTaskException", args.Exception.ToString()));
+            dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: TaskSchedulerOnUnobservedTaskException", args.Exception.ToString()));
 
             Debug.WriteLine(args.Exception.ToString(), "Error: TaskSchedulerOnUnobservedTaskException");
         }
 
         private void CurrentOnDispatcherUnhandledException(DispatcherUnhandledExceptionEventArgs args)
         {
+            args.Handled = true;
             var dialog = new MessageDialog();
-            //dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: CurrentOnDispatcherUnhandledException", args.Exception.ToString()));
+            dialog.ShowDialogWindow(new MessageDialogViewModel(dialog, "Error: CurrentOnDispatcherUnhandledException", args.Exception.ToString()));
 
             Debug.WriteLine(args.Exception.ToString(), "Error: CurrentOnDispatcherUnhandledException");
 

@@ -5,9 +5,29 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wallppr.UI.Pages"
       xmlns:viewmodel="clr-namespace:Wallppr.ViewModel.Wallpaper"
+      xmlns:li="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF" 
       mc:Ignorable="d">
 
     <Grid>
+        <!-- Loading Indicator -->
+        <Grid HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <li:LoadingIndicator SpeedRatio="1" 
+                             Margin="20"
+                             Foreground="{StaticResource ThemeColor4Brush}"
+                             Style="{StaticResource LoadingIndicatorPulseStyleKey}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"/>
+
+            <TextBlock Grid.Column="1" Text="{DynamicResource Loading}"
+                       Foreground="{StaticResource ThemeColor4Brush}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Grid>
         <Image Source="{Binding Path}"
                DataContext="{Binding SelectedWallpaper}"
                Stretch="Uniform"
@@ -29,8 +49,9 @@
                              HorizontalAlignment="Center"
                              VerticalAlignment="Center"
                              Foreground="{StaticResource ThemeColor5Brush}"/>
-                <TextBlock Text="DOWNLOADING..."
+                <TextBlock Text="{DynamicResource Downloading}"
                            Foreground="{StaticResource ThemeColor4Brush}"
+                           Typography.Capitals="AllSmallCaps"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
             </StackPanel>

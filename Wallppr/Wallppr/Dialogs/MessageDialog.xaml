@@ -24,6 +24,7 @@
                   HorizontalScrollBarVisibility="Auto">
         <TextBlock Text="{Binding Content}" 
                    Margin="15"
-                   TextWrapping="WrapWithOverflow"/>
+                   TextWrapping="WrapWithOverflow"
+                   Foreground="{StaticResource BlueGrey300Brush}"/>
     </ScrollViewer>
 </local:DialogWindow>

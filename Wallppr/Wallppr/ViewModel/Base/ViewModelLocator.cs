@@ -16,6 +16,7 @@ using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Wallppr.ViewModel.App;
+using Wallppr.ViewModel.Wallpaper;
 using static Wallppr.DI.DI;
 //using Microsoft.Practices.ServiceLocation;
 
@@ -40,6 +41,10 @@ namespace Wallppr.ViewModel.Base
             else
             {
                 SimpleIoc.Default.Register<NavbarViewModel>();
+                SimpleIoc.Default.Register<AppSettingsViewModel>();
+                SimpleIoc.Default.Register<MyWallpapersViewModel>();
+                SimpleIoc.Default.Register<DesktopWallpapersViewModel>();
+                SimpleIoc.Default.Register<MobileWallpapersViewModel>();
             }
         }
 
@@ -62,6 +67,38 @@ namespace Wallppr.ViewModel.Base
             get
             {
                 return ServiceLocator.Current.GetInstance<NavbarViewModel>();
+            }
+        }
+
+        public AppSettingsViewModel AppSettingsVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AppSettingsViewModel>();
+            }
+        }
+
+        public MyWallpapersViewModel MyWallpapersVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MyWallpapersViewModel>();
+            }
+        }
+
+        public DesktopWallpapersViewModel DesktopWallpapersVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DesktopWallpapersViewModel>();
+            }
+        }
+
+        public MobileWallpapersViewModel MobileWallpapersVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MobileWallpapersViewModel>();
             }
         }
 

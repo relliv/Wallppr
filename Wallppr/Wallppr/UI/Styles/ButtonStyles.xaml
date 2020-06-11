@@ -37,21 +37,23 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <!-- Content -->
-                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
+                    <Grid>
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" 
                               BorderThickness="{TemplateBinding BorderThickness}" 
                               Background="{TemplateBinding Background}" 
                               SnapsToDevicePixels="true" 
-                              CornerRadius="15">
-                        <ContentPresenter x:Name="contentPresenter" Focusable="False" 
+                              CornerRadius="20">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" 
                                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                             Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="7" Color="#000" 
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="7" Color="#000" 
                                               Opacity=".1" ShadowDepth="3" Direction="0"/>
-                        </Border.Effect>
-                    </Border>
+                            </Border.Effect>
+                        </Border>
+                    </Grid>
 
                     <!-- Triggers -->
                     <ControlTemplate.Triggers>
@@ -150,7 +152,7 @@
                                        Foreground="{StaticResource BlueGrey400Brush}"
                                        TextAlignment="Left"
                                        VerticalAlignment="Center"
-                                       FontWeight="SemiBold" FontSize="14"/>
+                                       FontWeight="Regular" FontSize="14"/>
 
                             <Border x:Name="LineBorder" BorderBrush="{StaticResource ThemeColor4Brush}" 
                                     HorizontalAlignment="Left" BorderThickness="0 0 0 1" 

@@ -21,6 +21,22 @@
                 Tag="{Binding}"/>
     </DataTemplate>
 
+    <DataTemplate x:Key="PaginationItemRandomDataTemplate">
+        <Button Style="{StaticResource PaginationButtonStyle}"
+                Command="{Binding DataContext.GotoPageRandomCommand, 
+                          RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
+                Tag="{Binding}"/>
+    </DataTemplate>
+    
+    <DataTemplate x:Key="PaginationItemLatestDataTemplate">
+        <Button Style="{StaticResource PaginationButtonStyle}"
+                Command="{Binding DataContext.GoToPageLatestCommand, 
+                          RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
+                Tag="{Binding}"/>
+    </DataTemplate>
+
     <!--#region ContextMenu Examples -->
 
     <ContextMenu x:Key="AnyItemContextMenu">

@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="NoData">No Data</system:String>
+    <system:String x:Key="Mobile">Mobile</system:String>
+    <system:String x:Key="Desktop">Desktop</system:String>
+    <system:String x:Key="MobileWallpapers">Mobile Wallpapers</system:String>
+    <system:String x:Key="DesktopWallpapers">Desktop Wallpapers</system:String>
+    <system:String x:Key="MyWallpapers">My Wallpapers</system:String>
+    <system:String x:Key="LatestWallpapers">Latest</system:String>
+    <system:String x:Key="RandomWallpapers">Random</system:String>
+    <system:String x:Key="SelectSaveDestination">SAvSave Destination</system:String>
+    <system:String x:Key="SetAsBackground">Set As Background</system:String>
+    <system:String x:Key="SaveAs">Save As</system:String>
+    <system:String x:Key="Download">Download</system:String>
+    <system:String x:Key="Downloading">Downloading...</system:String>
+    <system:String x:Key="Loading">Loading...</system:String>
+    <system:String x:Key="RemoveFromMyList">Remove from My List</system:String>
+    <system:String x:Key="Saved">Saved</system:String>
+    <system:String x:Key="AddtoFavorites">Add to Favorites</system:String>
+    <system:String x:Key="Error">Error!</system:String>
+    <system:String x:Key="Info">Info:</system:String>
+    <system:String x:Key="AvailableLanguages">Available Languages:</system:String>
+    <system:String x:Key="LanguageChangeMessage">Some settings may require you to restart the application..</system:String>
+    <system:String x:Key="Update">Update:</system:String>
+    <system:String x:Key="ThereIsNewerVersion">There is newer version found. Dou you want to update app?</system:String>
+</ResourceDictionary>

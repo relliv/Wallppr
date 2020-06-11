@@ -10,6 +10,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -20,6 +21,7 @@ using Wallppr.Models.Common;
 using Wallppr.Models.Wallpaper;
 using Wallppr.Models.Wallpaper.Enums;
 using Wallppr.Models.Wallpaper.Json;
+using Wallppr.UI.i18N;
 using static Wallppr.DI.DI;
 using static Wallppr.Helpers.GetResolutions;
 
@@ -29,13 +31,22 @@ namespace Wallppr.ViewModel.Wallpaper
     {
         public WallpapersCommonViewModel()
         {
-            GoToPageCommand = new RelayParameterizedCommand(GoToPage);
+            WallhavenApiUrl = "https://wallhaven.cc/api/v1/search";
+            WallpapersCraftApiUrl = "https://api.wallpaperscraft.com/images";
+
+            // go to page commands
+            GotoPageRandomCommand = new RelayParameterizedCommand(GoToPageRandom);
+            GoToPageLatestCommand = new RelayParameterizedCommand(GoToPageLatest);
+
+            TabSelectionChangedCommand = new RelayParameterizedCommand(TabSelectionChanged);
             ResolutionChangedCommand = new RelayParameterizedCommand(ResolutionChanged);
             ShowWallpaperCommand = new RelayParameterizedCommand(ShowWallpaper);
             SetAsCommand = new RelayParameterizedCommand(SetAs);
             SetFavoriteWallpaperCommand = new RelayParameterizedCommand(SetFavoriteWallpaper);
 
-            Wallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+            RandomWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+            LatestWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+
             ProgressVisibility = Visibility.Hidden;
         }
 
@@ -43,21 +54,36 @@ namespace Wallppr.ViewModel.Wallpaper
 
         public ICommand SetAsCommand { get; set; }
         public ICommand SetFavoriteWallpaperCommand { get; set; }
-        public ICommand GoToPageCommand { get; set; }
         public ICommand ResolutionChangedCommand { get; set; }
         public ICommand ShowWallpaperCommand { get; set; }
+        public ICommand TabSelectionChangedCommand { get; set; }
+
+        #region Goto Page
+
+        public ICommand GotoPageRandomCommand { get; set; }
+        public ICommand GoToPageLatestCommand { get; set; }
+
+        #endregion
 
         #endregion
 
 
         #region Public Properties
 
-        public string ApiUrl { get; set; }
-        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> Wallpapers { get; set; }
-        public List<ResolutionRatio> ResolutionRatios { get; set; }
-        public ResolutionRatio SelectedResolutionRatio { get; set; }
-        public Models.Wallpaper.Resolution SelectedResolution { get; set; }
+        #region API
 
+        public string WallhavenApiUrl { get; set; }
+        public string WallpapersCraftApiUrl { get; set; }
+
+        #endregion
+
+        #region Wallpaper
+
+        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> RandomWallpapers { get; set; }
+        public Visibility RandomWallpapersLIVisibility { get; set; }
+
+        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> LatestWallpapers { get; set; }
+        public Visibility LatestWallpapersLIVisibility { get; set; }
 
         public Models.Wallpaper.Entities.Wallpaper SelectedWallpaper { get; set; }
         public WallpaperType WallpapersType { get; set; }
@@ -66,12 +92,48 @@ namespace Wallppr.ViewModel.Wallpaper
 
         #endregion
 
+        #region Resolution
+
+        #region Random
+
+        public List<ResolutionRatio> RandomResolutionRatios { get; set; }
+        public ResolutionRatio SelectedRandomResolutionRatio { get; set; }
+        public Models.Wallpaper.Resolution SelectedRandomResolution { get; set; }
+
+        #endregion
+
+        #region Latest
+
+        public List<ResolutionRatio> LatestResolutionRatios { get; set; }
+        public ResolutionRatio SelectedLatestResolutionRatio { get; set; }
+        public Models.Wallpaper.Resolution SelectedLatestResolution { get; set; }
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+
         #region Pagination
 
-        public Pagination Pagination { get; set; }
-        public int PageLimit { get; set; } = 24;
-        public int CurrentPage { get; set; } = 1;
-        public string SearchTerm { get; set; }
+        #region Random
+
+        public Pagination RandomPagination { get; set; }
+        public int RandomPageLimit { get; set; } = 24;
+        public int RandomCurrentPage { get; set; } = 1;
+        public string RandomSearchTerm { get; set; }
+
+        #endregion
+
+        #region Latest
+
+        public Pagination LatestPagination { get; set; }
+        public int LatestPageLimit { get; set; } = 24;
+        public int LatestCurrentPage { get; set; } = 1;
+        public string LatestSearchTerm { get; set; }
+
+        #endregion
 
         #endregion
 
@@ -79,40 +141,37 @@ namespace Wallppr.ViewModel.Wallpaper
         #region Methods
 
         /// <summary>
-        /// Fetch and load wallpapers from apis
+        /// Fetch and load random wallpapers from apis
         /// </summary>
-        public void LoadWallpapers()
+        public void LoadRandomWallpapers()
         {
-            new Task(() =>
+            new Task(async () =>
             {
-                Task.Delay(500);
+                RandomWallpapersLIVisibility = Visibility.Visible;
 
-                if (ViewModelApplication.TempWallpapers != null)
-                {
-                    Wallpapers = ViewModelApplication.TempWallpapers;
-                    Pagination = ViewModelApplication.TempPagination;
-
-                    ViewModelApplication.TempWallpapers = null;
-                    ViewModelApplication.TempPagination = null;
-                    ViewModelApplication.BackToButtonVisibility = Visibility.Hidden;
-
-                    return;
-                }
-
-                SetApiPath();
+                await Task.Delay(700);
 
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var wallpapersData = ApiUrl.Get();
+                    // set empty wallpaper list
+                    RandomWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
 
                     // load desktop wallpapers
                     if (WallpapersType == WallpaperType.Desktop)
                     {
+                        // random wallpapers api url
+                        var apiUrl = $"{WallhavenApiUrl}?page={RandomCurrentPage}&sorting=random" +
+                        $"&resolutions={SelectedRandomResolution.ResolutionX}x{SelectedRandomResolution.ResolutionY}";
+
+                        // get data
+                        var wallpapersData = apiUrl.Get();
+
+                        // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<WallpapersJson>(wallpapersData);
 
-                        var wallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
                         using var db = new AppDbContext();
 
+                        // loop in wallpaper data
                         foreach (var item in jsonObjwallpapers.data)
                         {
                             var wallpaper = new Models.Wallpaper.Entities.Wallpaper
@@ -124,7 +183,7 @@ namespace Wallppr.ViewModel.Wallpaper
                                 DimensionY = item.dimension_y,
                                 WallpaperUrl = item.path,
                                 WallpaperThumbUrl = item.thumbs.large,
-                                ColorPalette = item.colors.Select(color => new Models.Wallpaper.Entities.Color
+                                ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
                                 {
                                     ColorCode = color
                                 }).ToObservableCollection()
@@ -147,20 +206,29 @@ namespace Wallppr.ViewModel.Wallpaper
                             })
                             .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
 
-                            wallpapers.Add(wallpaper);
+                            RandomWallpapers.Add(wallpaper);
                         }
 
-                        Wallpapers = wallpapers;
-                        Pagination = new Pagination(jsonObjwallpapers.meta.total, CurrentPage, PageLimit, 15);
+                        // wallpaper pagination
+                        RandomPagination = new Pagination(jsonObjwallpapers.meta.total, RandomCurrentPage, RandomPageLimit, 10);
                     }
                     // load mobile wallpapers
                     else if (WallpapersType == WallpaperType.Mobile)
                     {
+                        // random wallpapers api url
+                        var apiUrl = $"{WallpapersCraftApiUrl}/shuffle?offset={RandomCurrentPage * 30}" +
+                        $"&screen[width]={SelectedRandomResolution.ResolutionX}&screen[height]={SelectedRandomResolution.ResolutionY}" +
+                        $"&sort=date&types[]=free&types[]=public";
+
+                        // get data
+                        var wallpapersData = apiUrl.Get();
+
+                        // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<MobileWallpapersJson>(wallpapersData);
 
-                        var wallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
                         using var db = new AppDbContext();
 
+                        // loop in wallpapers data
                         foreach (var item in jsonObjwallpapers.items)
                         {
                             var wallpaper = new Models.Wallpaper.Entities.Wallpaper
@@ -192,32 +260,148 @@ namespace Wallppr.ViewModel.Wallpaper
                             })
                             .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
 
-                            wallpapers.Add(wallpaper);
+                            RandomWallpapers.Add(wallpaper);
                         }
 
-                        Wallpapers = wallpapers;
-                        Pagination = new Pagination(jsonObjwallpapers.count, CurrentPage, PageLimit, 15);
+                        // wallpaper pagination
+                        RandomPagination = new Pagination(jsonObjwallpapers.count, RandomCurrentPage, RandomPageLimit, 10);
                     }
                 });
+
+                RandomWallpapersLIVisibility = Visibility.Hidden;
             }).Start();
         }
 
         /// <summary>
-        /// Build API request query
+        /// Fetch and load latest wallpapers from apis
         /// </summary>
-        public void SetApiPath()
+        public void LoadLatestWallpapers()
         {
-            if (WallpapersType == WallpaperType.Desktop)
+            new Task(async () =>
             {
-                ApiUrl = $"https://wallhaven.cc/api/v1/search?page={CurrentPage}" +
-                     $"&resolutions={SelectedResolution.ResolutionX}x{SelectedResolution.ResolutionY}";
-            }
-            else if (WallpapersType == WallpaperType.Mobile)
-            {
-                ApiUrl = $"https://api.wallpaperscraft.com/images?offset={CurrentPage * 30}" +
-                 $"&screen[width]={SelectedResolution.ResolutionX}&screen[height]={SelectedResolution.ResolutionY}" +
-                 $"&sort=date&types[]=free&types[]=private";
-            }
+                LatestWallpapersLIVisibility = Visibility.Visible;
+
+                await Task.Delay(700);
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // set empty wallpaper list
+                    LatestWallpapers = new ObservableCollection<Models.Wallpaper.Entities.Wallpaper>();
+
+                    // load desktop wallpapers
+                    if (WallpapersType == WallpaperType.Desktop)
+                    {
+                        // random wallpapers api url
+                        var apiUrl = $"{WallhavenApiUrl}?page={LatestCurrentPage}" +
+                        $"&resolutions={SelectedLatestResolution.ResolutionX}x{SelectedLatestResolution.ResolutionY}";
+
+                        // get data
+                        var wallpapersData = apiUrl.Get();
+
+                        // parsed wallpapers data
+                        var jsonObjwallpapers = JsonConvert.DeserializeObject<WallpapersJson>(wallpapersData);
+
+                        using var db = new AppDbContext();
+
+                        // loop in wallpapers data
+                        foreach (var item in jsonObjwallpapers.data)
+                        {
+                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                            {
+                                UId = item.id,
+                                Path = item.path,
+                                Thumbnail = item.thumbs.large.PathToBitmapImage(),
+                                DimensionX = item.dimension_x,
+                                DimensionY = item.dimension_y,
+                                WallpaperUrl = item.path,
+                                WallpaperThumbUrl = item.thumbs.large,
+                                ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
+                                {
+                                    ColorCode = color
+                                }).ToObservableCollection()
+                            };
+
+                            wallpaper = db.Wallpapers
+                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                            {
+                                Id = x.Id,
+                                UId = x.UId,
+                                Path = x.Path,
+                                Thumbnail = x.Thumbnail,
+                                DimensionX = x.DimensionX,
+                                DimensionY = x.DimensionY,
+                                IsFavorite = x.IsFavorite,
+                                WallpaperUrl = x.WallpaperUrl,
+                                WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                .ToObservableCollection()
+                            })
+                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+
+                            LatestWallpapers.Add(wallpaper);
+                        }
+
+                        // wallpaper pagination
+                        LatestPagination = new Pagination(jsonObjwallpapers.meta.total, LatestCurrentPage, LatestPageLimit, 10);
+                    }
+                    // load mobile wallpapers
+                    else if (WallpapersType == WallpaperType.Mobile)
+                    {
+                        // random wallpapers api url
+                        var apiUrl = $"{WallpapersCraftApiUrl}?offset={LatestCurrentPage * 30}" +
+                        $"&screen[width]={SelectedLatestResolution.ResolutionX}&screen[height]={SelectedLatestResolution.ResolutionY}" +
+                        $"&sort=date&types[]=free&types[]=public";
+
+                        // get data
+                        var wallpapersData = apiUrl.Get();
+
+                        // parsed wallpapers data
+                        var jsonObjwallpapers = JsonConvert.DeserializeObject<MobileWallpapersJson>(wallpapersData);
+
+                        using var db = new AppDbContext();
+
+                        // loop in wallpapers data
+                        foreach (var item in jsonObjwallpapers.items)
+                        {
+                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                            {
+                                UId = item.id.ToString(),
+                                Path = item.variations.adapted.url,
+                                Thumbnail = item.variations.preview_small.url.PathToBitmapImage(),
+                                DimensionX = item.variations.adapted.resolution.width,
+                                DimensionY = item.variations.adapted.resolution.height,
+                                WallpaperUrl = item.variations.adapted.url,
+                                WallpaperThumbUrl = item.variations.preview_small.url,
+                                WallpaperType = WallpaperType.Mobile
+                            };
+
+                            wallpaper = db.Wallpapers
+                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                            {
+                                Id = x.Id,
+                                UId = x.UId,
+                                Path = x.Path,
+                                Thumbnail = x.Thumbnail,
+                                DimensionX = x.DimensionX,
+                                DimensionY = x.DimensionY,
+                                IsFavorite = x.IsFavorite,
+                                WallpaperUrl = x.WallpaperUrl,
+                                WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                .ToObservableCollection()
+                            })
+                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+
+                            LatestWallpapers.Add(wallpaper);
+                        }
+
+                        // wallpaper pagination
+                        LatestPagination = new Pagination(jsonObjwallpapers.count, LatestCurrentPage, LatestPageLimit, 10);
+                    }
+                });
+
+                LatestWallpapersLIVisibility = Visibility.Hidden;
+            }).Start();
         }
 
         /// <summary>
@@ -228,56 +412,121 @@ namespace Wallppr.ViewModel.Wallpaper
         {
             using var db = new AppDbContext();
 
-            var selectedRes = new Models.Wallpaper.Resolution();
+            var selectedRandomRes = new Models.Wallpaper.Resolution();
+            var selectedLatestRes = new Models.Wallpaper.Resolution();
 
             if (WallpapersType == WallpaperType.Desktop)
             {
-                // get resolutions
-                ResolutionRatios = GetDesktopResolutionRatios();
+                var resolutions = GetDesktopResolutionRatios();
+                RandomResolutionRatios = resolutions;
+                LatestResolutionRatios = resolutions;
 
-                // get last selected resolution
-                var setting = db.AppSettings.FirstOrDefault(x => x.SettingName == "DesktopWallpaperResolution");
-                var savedRes = setting.Value.Split('x');
+                #region Random Resoltuion
 
-                selectedRes = new Models.Wallpaper.Resolution
+                // get last random selected resolution
+                var randomResolutionsetting = db.AppSettings.FirstOrDefault(x => x.SettingName == "DesktopRandomWallpaperResolution");
+                var savedRandomRes = randomResolutionsetting.Value.Split('x');
+
+                selectedRandomRes = new Models.Wallpaper.Resolution
                 {
-                    ResolutionX = setting != null ? int.Parse(savedRes[0]) : 1920,
-                    ResolutionY = setting != null ? int.Parse(savedRes[1]) : 1080,
+                    ResolutionX = randomResolutionsetting != null ? int.Parse(savedRandomRes[0]) : 1920,
+                    ResolutionY = randomResolutionsetting != null ? int.Parse(savedRandomRes[1]) : 1080,
                 };
+
+                #endregion
+
+                #region Latest Resolution
+
+                // get last latest selected resolution
+                var latestResolutionsetting = db.AppSettings.FirstOrDefault(x => x.SettingName == "DesktopLastestWallpaperResolution");
+                var savedLatestRes = latestResolutionsetting.Value.Split('x');
+
+                selectedLatestRes = new Models.Wallpaper.Resolution
+                {
+                    ResolutionX = latestResolutionsetting != null ? int.Parse(savedLatestRes[0]) : 1920,
+                    ResolutionY = latestResolutionsetting != null ? int.Parse(savedLatestRes[1]) : 1080,
+                };
+
+                #endregion
             }
             else if (WallpapersType == WallpaperType.Mobile)
             {
-                // get resolutions
-                ResolutionRatios = GetMobileResolutionRatios();
+                var resolutions = GetMobileResolutionRatios();
+                RandomResolutionRatios = resolutions;
+                LatestResolutionRatios = resolutions;
 
-                // get last selected resolution
-                var setting = db.AppSettings.FirstOrDefault(x => x.SettingName == "MobileWallpaperResolution");
-                var savedRes = setting.Value.Split('x');
+                #region Random Resoltuion
 
-                selectedRes = new Models.Wallpaper.Resolution
+                // get last random selected resolution
+                var randomResolutionsetting = db.AppSettings.FirstOrDefault(x => x.SettingName == "MobileRandomWallpaperResolution");
+                var savedRandomRes = randomResolutionsetting.Value.Split('x');
+
+                selectedRandomRes = new Models.Wallpaper.Resolution
                 {
-                    ResolutionX = setting != null ? int.Parse(savedRes[0]) : 1080,
-                    ResolutionY = setting != null ? int.Parse(savedRes[1]) : 1920,
+                    ResolutionX = randomResolutionsetting != null ? int.Parse(savedRandomRes[0]) : 1080,
+                    ResolutionY = randomResolutionsetting != null ? int.Parse(savedRandomRes[1]) : 1920,
                 };
+
+                #endregion
+
+                #region Latest Resolution
+
+                // get last latest selected resolution
+                var latestResolutionsetting = db.AppSettings.FirstOrDefault(x => x.SettingName == "MobileLatestWallpaperResolution");
+                var savedLatestRes = latestResolutionsetting.Value.Split('x');
+
+                selectedLatestRes = new Models.Wallpaper.Resolution
+                {
+                    ResolutionX = latestResolutionsetting != null ? int.Parse(savedLatestRes[0]) : 1920,
+                    ResolutionY = latestResolutionsetting != null ? int.Parse(savedLatestRes[1]) : 1080,
+                };
+
+                #endregion
             }
 
+            #region Random Resoltuion
+
             // select resolution ratio
-            SelectedResolutionRatio = ResolutionRatios?
-                .FirstOrDefault(x => x.Resolutions
-                    .Any(c => c.ResolutionX == selectedRes.ResolutionX && c.ResolutionY == selectedRes.ResolutionY));
+            SelectedRandomResolutionRatio = RandomResolutionRatios?
+            .FirstOrDefault(x => x.Resolutions
+            .Any(c => c.ResolutionX == selectedRandomRes.ResolutionX && c.ResolutionY == selectedRandomRes.ResolutionY));
 
-            if (SelectedResolutionRatio == null || SelectedResolutionRatio.Resolutions.Count <= 0) return;
+            if (SelectedRandomResolutionRatio == null || SelectedRandomResolutionRatio.Resolutions.Count <= 0) return;
 
-            foreach (var res in SelectedResolutionRatio.Resolutions)
+            foreach (var res in SelectedRandomResolutionRatio.Resolutions)
             {
-                if (!(res.ResolutionX == selectedRes.ResolutionX && res.ResolutionY == selectedRes.ResolutionY)) continue;
+                if (!(res.ResolutionX == selectedRandomRes.ResolutionX && res.ResolutionY == selectedRandomRes.ResolutionY)) continue;
 
                 // set selected resolution
                 res.IsChecked = true;
-                SelectedResolution = res;
+                SelectedRandomResolution = res;
 
                 break;
             }
+
+            #endregion
+
+            #region Latest Resolution
+
+            // select resolution ratio
+            SelectedLatestResolutionRatio = LatestResolutionRatios?
+            .FirstOrDefault(x => x.Resolutions
+            .Any(c => c.ResolutionX == selectedLatestRes.ResolutionX && c.ResolutionY == selectedLatestRes.ResolutionY));
+
+            if (SelectedLatestResolutionRatio == null || SelectedLatestResolutionRatio.Resolutions.Count <= 0) return;
+
+            foreach (var res in SelectedLatestResolutionRatio.Resolutions)
+            {
+                if (!(res.ResolutionX == selectedLatestRes.ResolutionX && res.ResolutionY == selectedLatestRes.ResolutionY)) continue;
+
+                // set selected resolution
+                res.IsChecked = true;
+                SelectedLatestResolution = res;
+
+                break;
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -295,7 +544,7 @@ namespace Wallppr.ViewModel.Wallpaper
             {
                 var folderBrowserDialog = new FolderBrowserDialog
                 {
-                    Description = "Select Save Destination",
+                    Description = ViewModelApplication.LanguageResourceDictionary["SelectSaveDestination"].ToString(),
                     RootFolder = Environment.SpecialFolder.Desktop
                 };
 
@@ -399,15 +648,41 @@ namespace Wallppr.ViewModel.Wallpaper
         #region Command Methods
 
         /// <summary>
-        /// Go to selected page
+        /// Tab selection changed
         /// </summary>
         /// <param name="sender"></param>
-        public void GoToPage(object sender)
+        public void TabSelectionChanged(object sender)
+        {
+            var tabIndex = (int)sender;
+
+            if (tabIndex == 1 && (LatestWallpapers == null || LatestWallpapers.Count <= 0))
+            {
+                LoadLatestWallpapers();
+            }
+        }
+
+        /// <summary>
+        /// Go to selected random page
+        /// </summary>
+        /// <param name="sender"></param>
+        public void GoToPageRandom(object sender)
         {
             var page = (Models.Common.Page)sender;
 
-            CurrentPage = page.PageNumber;
-            LoadWallpapers();
+            RandomCurrentPage = page.PageNumber;
+            LoadRandomWallpapers();
+        }
+
+        /// <summary>
+        /// Go to selected latest page
+        /// </summary>
+        /// <param name="sender"></param>
+        public void GoToPageLatest(object sender)
+        {
+            var page = (Models.Common.Page)sender;
+
+            LatestCurrentPage = page.PageNumber;
+            LoadLatestWallpapers();
         }
 
         /// <summary>
@@ -425,10 +700,10 @@ namespace Wallppr.ViewModel.Wallpaper
                 ProgressVisibility = Visibility.Visible;
 
                 var wallpaperPath = WallpapersType == WallpaperType.Desktop ? 
-                $"{Settings.CurrentDirectory}\\Wallpapers\\{wallpaper.UId}{Path.GetExtension(wallpaper.Path)}"
-                : $"{Settings.CurrentDirectory}\\Wallpapers\\Mobile\\{wallpaper.UId}{Path.GetExtension(wallpaper.Path)}";
+                $@"{Settings.WallpaperDesktopFolder}\{wallpaper.UId}{Path.GetExtension(wallpaper.Path)}"
+                : $@"{Settings.WallpaperMobileFolder}\\{wallpaper.UId}{Path.GetExtension(wallpaper.Path)}";
 
-                var thumbnailPath = $"{Settings.CurrentDirectory}\\Thumbnails\\" +
+                var thumbnailPath = $@"{Settings.WallpaperThumbnailsFolder}\" +
                 $"{wallpaper.UId}{Path.GetExtension(wallpaper.Thumbnail.BitmapImageToPath())}";
 
                 using var webClient = new WebClient();
@@ -473,49 +748,90 @@ namespace Wallppr.ViewModel.Wallpaper
         /// Get wallpapers with selected resolution
         /// </summary>
         /// <param name="sender"></param>
-        public void ResolutionChanged(object sender)
+        public void ResolutionChanged(object parameters)
         {
-            // prevent reload to already loaded wallpapers
-            if (ViewModelApplication.TempWallpapers != null) return;
+            var values = (object[])parameters;
 
             // get set selected resolution
-            var resolution = (Models.Wallpaper.Resolution)sender;
-            SelectedResolution = resolution;
+            var resolution = (Models.Wallpaper.Resolution)values[0];
 
-            // save selected resolution
+            // resolution type
+            var type = (string)values[1];
+
             using var db = new AppDbContext();
-            var setting = new AppSetting();
 
-            if (WallpapersType == WallpaperType.Desktop)
+            if (type == "Random")
             {
-                setting = db.AppSettings.First(x => x.SettingName == "DesktopWallpaperResolution");
-            }
-            else if (WallpapersType == WallpaperType.Mobile)
-            {
-                setting = db.AppSettings.First(x => x.SettingName == "MobileWallpaperResolution");
-            }
+                SelectedRandomResolution = resolution;
 
-            setting.Value = $"{resolution.ResolutionX}x{resolution.ResolutionY}";
-            db.SaveChanges();
+                var setting = new AppSetting();
 
-
-            foreach (var item in ResolutionRatios)
-            {
-                foreach (var i in item.Resolutions)
+                if (WallpapersType == WallpaperType.Desktop)
                 {
-                    if (i != resolution)
+                    setting = db.AppSettings.First(x => x.SettingName == "DesktopRandomWallpaperResolution");
+                }
+                else if (WallpapersType == WallpaperType.Mobile)
+                {
+                    setting = db.AppSettings.First(x => x.SettingName == "MobileRandomWallpaperResolution");
+                }
+
+                setting.Value = $"{resolution.ResolutionX}x{resolution.ResolutionY}";
+                db.SaveChanges();
+
+                foreach (var item in RandomResolutionRatios)
+                {
+                    foreach (var i in item.Resolutions)
                     {
-                        i.IsChecked = false;
-                    }
-                    else
-                    {
-                        SelectedResolutionRatio = item;
+                        if (i != resolution)
+                        {
+                            i.IsChecked = false;
+                        }
+                        else
+                        {
+                            SelectedRandomResolutionRatio = item;
+                        }
                     }
                 }
-            }
 
-            CurrentPage = 1;
-            LoadWallpapers();
+                RandomCurrentPage = 1;
+                LoadRandomWallpapers();
+            }
+            else if (type == "Latest")
+            {
+                SelectedLatestResolution = resolution;
+
+                var setting = new AppSetting();
+
+                if (WallpapersType == WallpaperType.Desktop)
+                {
+                    setting = db.AppSettings.First(x => x.SettingName == "DesktopLastestWallpaperResolution");
+                }
+                else if (WallpapersType == WallpaperType.Mobile)
+                {
+                    setting = db.AppSettings.First(x => x.SettingName == "MobileLatestWallpaperResolution");
+                }
+
+                setting.Value = $"{resolution.ResolutionX}x{resolution.ResolutionY}";
+                db.SaveChanges();
+
+                foreach (var item in LatestResolutionRatios)
+                {
+                    foreach (var i in item.Resolutions)
+                    {
+                        if (i != resolution)
+                        {
+                            i.IsChecked = false;
+                        }
+                        else
+                        {
+                            SelectedLatestResolutionRatio = item;
+                        }
+                    }
+                }
+
+                RandomCurrentPage = 1;
+                LoadRandomWallpapers();
+            }
         }
 
         /// <summary>
@@ -527,8 +843,6 @@ namespace Wallppr.ViewModel.Wallpaper
             var wallpaper = (Models.Wallpaper.Entities.Wallpaper)sender;
 
             ViewModelApplication.SelectedWallpaper = wallpaper;
-            ViewModelApplication.TempWallpapers = Wallpapers;
-            ViewModelApplication.TempPagination = Pagination;
             ViewModelApplication.BackToButtonVisibility = Visibility.Visible;
 
             if (WallpapersType == WallpaperType.Desktop)

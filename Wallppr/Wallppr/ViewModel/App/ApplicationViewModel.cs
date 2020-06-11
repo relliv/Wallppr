@@ -6,6 +6,11 @@ using Wallppr.ViewModel.Base;
 using System.Windows;
 using System.Collections.ObjectModel;
 using Wallppr.Helpers;
+using Wallppr.UI.i18N;
+using KOR.ReleaseCheck;
+using System.Linq;
+using System;
+using System.Diagnostics;
 
 namespace Wallppr.ViewModel.App
 {
@@ -21,6 +26,10 @@ namespace Wallppr.ViewModel.App
             AppSettings = new AppSettings();
 
             BackToButtonVisibility = Visibility.Hidden;
+
+            LanguageResourceDictionary = i18N.GetCurrentLanguage();
+
+            CheckAppVersion();
         }
 
         #region Properties
@@ -32,13 +41,53 @@ namespace Wallppr.ViewModel.App
 
         public Models.Wallpaper.Entities.Wallpaper SelectedWallpaper { get; set; }
         public Visibility BackToButtonVisibility { get; set; } = Visibility.Hidden;
-        public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> TempWallpapers { get; set; }
-        public Pagination TempPagination { get; set; }
+
+        public ResourceDictionary LanguageResourceDictionary { get; set; }
+
 
         #endregion
 
 
         #region Methods
+
+        public void CheckAppVersion()
+        {
+            try
+            {
+                ReleaseCheck.GithubUsername = "EgoistDeveloper";
+                ReleaseCheck.GithubRepo = "Wallppr";
+                ReleaseCheck.UserAgentHeader = "Wallppr App";
+
+                var releases = ReleaseCheck.GetReleases();
+
+                if (releases.Count > 0)
+                {
+                    var lastRelease = releases.First();
+                    var lastVersion = lastRelease.TagName.Replace("v", null);
+
+                    var version1 = new Version(Settings.AppVersion);
+                    //var version2 = new Version(lastVersion);
+                    var version2 = new Version("0.0.3");
+
+                    if (version1.CompareTo(version2) < 0)
+                    {
+                        if (MessageBox.Show(
+                            LanguageResourceDictionary["ThereIsNewerVersion"].ToString(), 
+                            LanguageResourceDictionary["Update"].ToString(), 
+                            MessageBoxButton.YesNo, 
+                            MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                        {
+                            Process.Start(lastRelease.HtmlUrl.OriginalString);
+                        }
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp);
+            }
+        }
+
 
         /// <summary>
         /// Navigates to the specified page

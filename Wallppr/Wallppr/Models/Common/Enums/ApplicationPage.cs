@@ -3,6 +3,7 @@
     public enum ApplicationPage
     {
         WelcomePage,
+        AppSettings,
         Home,
         DesktopWallpapers,
         MobileWallpapers,

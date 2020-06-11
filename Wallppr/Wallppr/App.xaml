@@ -31,6 +31,9 @@
                 <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialIcons.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialColors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/Colors.xaml" />
+                
+                <!-- i18N -->
+                <ResourceDictionary Source="pack://application:,,,/UI/i18N/Lang-en-US.xaml"/>
 
                 <!-- Control Styles -->
                 <ResourceDictionary Source="pack://application:,,,/UI/Styles/ScrollBarStyles.xaml" />
@@ -48,6 +51,17 @@
                 <!-- DataTemplates -->
                 <ResourceDictionary Source="pack://application:,,,/UI/DataTemplates/CommonDataTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UI/DataTemplates/WallpapersDataTemplates.xaml" />
+
+                <!-- Loader Indicator Dictionaries -->
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingArcs.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingArcsRing.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingDoubleBounce.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingFlipPlane.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingPulse.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingRing.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingThreeDots.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingWave.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

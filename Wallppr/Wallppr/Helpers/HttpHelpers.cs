@@ -3,6 +3,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Wallppr.Dialogs;
+using Wallppr.ViewModel.App;
+using static Wallppr.DI.DI;
 
 namespace Wallppr.Helpers
 {
@@ -10,14 +13,28 @@ namespace Wallppr.Helpers
     {
         public static string Get(this string uri)
         {
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(uri);
+                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            using Stream stream = response.GetResponseStream();
-            using StreamReader reader = new StreamReader(stream);
+                using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using Stream stream = response.GetResponseStream();
+                using StreamReader reader = new StreamReader(stream);
 
-            return reader.ReadToEnd();
+                return reader.ReadToEnd();
+            }
+            catch (Exception exp)
+            {
+                var dialog = new MessageDialog();
+                dialog.ShowDialogWindow(new MessageDialogViewModel(
+                    dialog, 
+                    ViewModelApplication.LanguageResourceDictionary["Error"].ToString(), 
+                    exp.ToString()));
+
+            }
+
+            return null;
         }
 
         public static async Task Download(this string uri, string fileName)

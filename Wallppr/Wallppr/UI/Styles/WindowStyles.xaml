@@ -32,7 +32,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource Blue50Brush}" />
+                <Setter Property="Background" Value="{StaticResource ThemeColor2Brush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -41,7 +41,7 @@
     <Style TargetType="{x:Type Button}" x:Key="WindowCloseButton" BasedOn="{StaticResource WindowControlButton}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource Red50Brush}" />
+                <Setter Property="Background" Value="{StaticResource ThemeColor5Brush}" />
                 <Setter Property="Foreground" Value="{StaticResource BlueGrey600Brush}" />
             </Trigger>
         </Style.Triggers>
@@ -80,6 +80,7 @@
         <Setter Property="Height" Value="750"/>
         <Setter Property="Width" Value="1435"/>
         <Setter Property="Title" Value="{Binding Title}"/>
+        <Setter Property="Icon" Value="pack://application:,,,/Resources/squares.ico"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -167,6 +168,7 @@
         <Setter Property="Width" Value="{Binding WindowMinimumWidth}"/>
         <Setter Property="Height" Value="{Binding WindowMinimumHeight}"/>
         <Setter Property="Background" Value="{StaticResource ThemeColor1Brush}"/>
+        <Setter Property="Icon" Value="pack://application:,,,/Resources/squares.ico"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -211,7 +213,7 @@
                                 </Grid.RowDefinitions>
 
                                 <!-- Title Bar -->
-                                <Grid Grid.Column="0" Panel.ZIndex="1" Background="{StaticResource WhiteBrush}">
+                                <Grid Grid.Column="0" Panel.ZIndex="1" Background="{StaticResource ThemeColor3Brush}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="{Binding ElementName=WindowButtonCol, Path=ActualWidth}" />
                                         <ColumnDefinition Width="*" />
@@ -219,7 +221,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Title -->
-                                    <TextBlock Grid.Column="1" Text="{Binding Title}" TextAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Title}" 
+                                               Foreground="{StaticResource BlueGrey300Brush}"
+                                               TextAlignment="Center" 
+                                               VerticalAlignment="Center"/>
 
                                     <!-- Window Control Buttons -->
                                     <StackPanel Grid.Column="2" 
@@ -237,7 +242,7 @@
                                 </Grid>
 
                                 <!-- Page Content -->
-                                <Border Grid.Row="2" Background="{StaticResource WhiteBrush}"
+                                <Border Grid.Row="2" Background="{StaticResource ThemeColor2Brush}"
                                         ClipToBounds="True" CornerRadius="0" Padding="15">
                                     <ContentPresenter Content="{TemplateBinding Content}" />
                                 </Border>
@@ -259,6 +264,7 @@
         <Setter Property="Width" Value="{Binding WindowMinimumWidth}"/>
         <Setter Property="Height" Value="{Binding WindowMinimumHeight}"/>
         <Setter Property="Background" Value="{StaticResource ThemeColor1Brush}"/>
+        <Setter Property="Icon" Value="pack://application:,,,/Resources/squares.ico"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">

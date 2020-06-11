@@ -9,7 +9,7 @@ namespace Wallppr.ViewModel.Wallpaper
             WallpapersType = WallpaperType.Desktop;
 
             LoadResolutionRatios();
-            LoadWallpapers();
+            LoadRandomWallpapers();
         }
     }
 }
