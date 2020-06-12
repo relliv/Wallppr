@@ -50,7 +50,7 @@ namespace Wallppr.Data
 
             var isConfiguredSetting = db.AppSettings.Where(x => x.SettingName == "IsAppConfigured").FirstOrDefault();
 
-            if (int.Parse(isConfiguredSetting.Value) == 0)
+            if (isConfiguredSetting.Value == "0")
             {
                 var availableLangs = i18N.GetAvailableLangauges();
                 var currentLang = Thread.CurrentThread.CurrentCulture.Name;
@@ -59,6 +59,9 @@ namespace Wallppr.Data
                 {
                     i18N.SwitchCurrentLanguage(currentLang);
                 }
+
+                isConfiguredSetting.Value = "1";
+                db.SaveChanges();
             }
         }
 
