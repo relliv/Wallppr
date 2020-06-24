@@ -28,9 +28,9 @@
             <!-- Resource Dictionaries -->
             <ResourceDictionary.MergedDictionaries>
                 <!-- Colors -->
-                <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialIcons.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/MaterialColors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/ColorAndIcons/Icons.xaml" />
                 
                 <!-- i18N -->
                 <ResourceDictionary Source="pack://application:,,,/UI/i18N/Lang-en-US.xaml"/>

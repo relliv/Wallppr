@@ -31,6 +31,8 @@ namespace Wallppr.Helpers
                     return new MobileWallpapers();
                 case ApplicationPage.MyWallpapers:
                     return new MyWallpapers(viewModel as MyWallpapersViewModel);
+                case ApplicationPage.History:
+                    return new History();
                 case ApplicationPage.Wallpaper:
                     return new Wallpaper(viewModel as WallpaperViewModel);
                 default:

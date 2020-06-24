@@ -8,6 +8,7 @@
         DesktopWallpapers,
         MobileWallpapers,
         MyWallpapers,
-        Wallpaper
+        Wallpaper,
+        History
     }
 }

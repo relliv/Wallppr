@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
+             xmlns:common="clr-namespace:Wallppr.Models.Common"
              xmlns:locator="clr-namespace:Wallppr.ViewModel.Base"
              mc:Ignorable="d" 
              d:DesignHeight="60" d:DesignWidth="800"
@@ -54,14 +56,14 @@
                                 HorizontalAlignment="Center">
                             <Path Height="15" Width="15" 
                                   Stretch="Uniform"
-                                  Data="{Binding Source={StaticResource ArrowLeft}, Path=Data}"
+                                  Data="{StaticResource ArrowLeft}"
                                   Fill="{StaticResource BlueGrey500Brush}"/>
                         </Border>
                     </Button>
 
                     <ListView Grid.Column="2" 
-                              ItemsSource="{Binding NavbarItems}"
-                              ItemTemplate="{StaticResource NavbarItemDataTemplate}"/>
+                              ItemTemplate="{StaticResource NavbarItemDataTemplate}"
+                              ItemsSource="{Binding NavbarItems}"/>
 
                     <!-- Settings Button -->
                     <Button Grid.Column="3" 
@@ -76,7 +78,7 @@
                                 HorizontalAlignment="Center">
                             <Path Height="15" Width="15" 
                                   Stretch="Uniform"
-                                  Data="{Binding Source={StaticResource Cogs}, Path=Data}"
+                                  Data="{StaticResource CogOutline}"
                                   Fill="{StaticResource BlueGrey500Brush}"/>
                         </Border>
                     </Button>

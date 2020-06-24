@@ -26,13 +26,13 @@ namespace Wallppr
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            _ = new AppDbContext();
+            _ = new Setup();
+
             var splashScreen = new UI.Controls.SplashScreen();
             splashScreen.Show();
 
             base.OnStartup(e);
-
-            _ = new AppDbContext();
-            _ = new Setup();
 
             ApplicationSetup();
 

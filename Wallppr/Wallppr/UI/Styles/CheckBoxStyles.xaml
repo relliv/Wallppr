@@ -29,7 +29,7 @@
                                 Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
 
                             <Path x:Name="starPath" 
-                                  Data="{Binding Source={StaticResource StarOutline}, Path=Data}" 
+                                  Data="{StaticResource StarOutline}" 
                                   Fill="{TemplateBinding Foreground}" 
                                   Stretch="Uniform"/>
                         </Grid>
@@ -49,7 +49,7 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="true">
                             <Setter Property="Fill" TargetName="starPath" Value="{StaticResource Amber600Brush}"/>
-                            <Setter Property="Data" TargetName="starPath" Value="{Binding Source={StaticResource Star}, Path=Data}"/>
+                            <Setter Property="Data" TargetName="starPath" Value="{StaticResource Star}"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -57,7 +57,7 @@
                                 <Condition Property="IsChecked" Value="True"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Fill" TargetName="starPath" Value="{StaticResource Amber300Brush}"/>
-                            <Setter Property="Data" TargetName="starPath" Value="{Binding Source={StaticResource StarOff}, Path=Data}"/>
+                            <Setter Property="Data" TargetName="starPath" Value="{StaticResource StarOff}"/>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

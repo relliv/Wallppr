@@ -60,7 +60,7 @@
                               Stretch="UniformToFill"
                               Height="3" Width="18"
                               Fill="{TemplateBinding Foreground}"
-                              Data="{Binding Source={StaticResource WindowMinimize}, Path=Data}" 
+                              Data="{StaticResource WindowMinimize}" 
                               SnapsToDevicePixels="True"/>
                     </Border>
                 </ControlTemplate>
@@ -139,10 +139,10 @@
                                                 Style="{StaticResource WindowMinimizeButton}"/>
                                         <Button Command="{Binding MaximizeCommand}" 
                                                 Style="{StaticResource WindowControlButton}"
-                                                Tag="{Binding Source={StaticResource WindowMaximize}, Path=Data}"/>
+                                                Tag="{StaticResource WindowMaximize}"/>
                                         <Button Command="{Binding CloseCommand}" 
                                                 Style="{StaticResource WindowCloseButton}"
-                                                Tag="{Binding Source={StaticResource WindowClose}, Path=Data}"/>
+                                                Tag="{StaticResource WindowClose}"/>
                                     </StackPanel>
                                 </Grid>
 
@@ -173,23 +173,27 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Border Padding="{Binding OuterMarginSize, FallbackValue=0}" 
-                            BorderBrush="{StaticResource BlueGrey100Brush}" 
-                            BorderThickness="{Binding FlatBorderThickness}">
+                            BorderBrush="{StaticResource ThemeColor4Brush}" 
+                            BorderThickness="1">
                         <Grid>
                             <!-- Outer dragging border -->
                             <Border BorderThickness="{Binding BeingMoved, Converter={StaticResource BooleanToBorderThicknessConverter}}"
                                     Panel.ZIndex="2"
                                     CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}"
-                                    BorderBrush="{TemplateBinding Background}" />
+                                    BorderBrush="{TemplateBinding Background}"/>
 
                             <!-- Opacity mask for corners on grid -->
                             <Border x:Name="Container"
                                       Background="{TemplateBinding Background}"
-                                      CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" />
+                                      CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}"
+                                      BorderBrush="{StaticResource BlueGrey100Brush}"
+                                      BorderThickness="1"/>
 
                             <!-- Window border and drop shadow -->
                             <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" 
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{StaticResource BlueGrey100Brush}"
+                                      BorderThickness="1">
                                 <Border.Effect>
                                     <DropShadowEffect ShadowDepth="0.5" Opacity="0.2" />
                                 </Border.Effect>
@@ -234,10 +238,10 @@
                                                 Style="{StaticResource WindowMinimizeButton}"/>
                                         <Button Command="{Binding MaximizeCommand}" 
                                                 Style="{StaticResource WindowControlButton}"
-                                                Tag="{Binding Source={StaticResource WindowMaximize}, Path=Data}"/>
+                                                Tag="{StaticResource WindowMaximize}"/>
                                         <Button Command="{Binding CloseCommand}" 
                                                 Style="{StaticResource WindowCloseButton}"
-                                                Tag="{Binding Source={StaticResource WindowClose}, Path=Data}"/>
+                                                Tag="{StaticResource WindowClose}"/>
                                     </StackPanel>
                                 </Grid>
 
@@ -333,10 +337,10 @@
                                                 Style="{StaticResource WindowMinimizeButton}"/>
                                         <Button Command="{Binding MaximizeCommand}" 
                                                 Style="{StaticResource WindowControlButton}"
-                                                Tag="{Binding Source={StaticResource WindowMaximize}, Path=Data}"/>
+                                                Tag="{StaticResource WindowMaximize}"/>
                                         <Button Command="{Binding CloseCommand}" 
                                                 Style="{StaticResource WindowCloseButton}"
-                                                Tag="{Binding Source={StaticResource WindowClose}, Path=Data}"/>
+                                                Tag="{StaticResource WindowClose}"/>
                                     </StackPanel>
                                 </Grid>
 

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using GalaSoft.MvvmLight;
 using Wallppr.Models.Common;
@@ -19,19 +20,25 @@ namespace Wallppr.ViewModel.App
                 {
                     ApplicationPage = ApplicationPage.DesktopWallpapers,
                     Title = ViewModelApplication.LanguageResourceDictionary["DesktopWallpapers"].ToString(),
-                    IconData = (Application.Current.FindResource("Wallpaper") as Path)?.Data,
+                    IconData = Application.Current.FindResource("Wallpaper") as Geometry
                 },
                 new NavbarItem()
                 {
                     ApplicationPage = ApplicationPage.MobileWallpapers,
                     Title = ViewModelApplication.LanguageResourceDictionary["MobileWallpapers"].ToString(),
-                    IconData = (Application.Current.FindResource("SmartCardOutline") as Path)?.Data,
+                    IconData = Application.Current.FindResource("SmartCardOutline") as Geometry,
                 },
                 new NavbarItem()
                 {
                     ApplicationPage = ApplicationPage.MyWallpapers,
                     Title = ViewModelApplication.LanguageResourceDictionary["MyWallpapers"].ToString(),
-                    IconData = (Application.Current.FindResource("HeartOutline") as Path)?.Data,
+                    IconData = Application.Current.FindResource("HeartOutline") as Geometry,
+                },
+                new NavbarItem()
+                {
+                    ApplicationPage = ApplicationPage.History,
+                    Title = ViewModelApplication.LanguageResourceDictionary["HistoryWallpapers"].ToString(),
+                    IconData = Application.Current.FindResource("History") as Geometry,
                 }
             };
 

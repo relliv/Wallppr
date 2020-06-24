@@ -69,11 +69,6 @@ namespace Wallppr.Data
             SaveChangesAsync();
         }
 
-        #region Example
-
-        //public DbSet<Example> Examples { get; set; }
-
-        #endregion
 
         #region AppSettings
 
@@ -85,6 +80,7 @@ namespace Wallppr.Data
 
         public DbSet<Wallpaper> Wallpapers { get; set; }
         public DbSet<Models.Wallpaper.Entities.Color> Colors { get; set; }
+        public DbSet<History> History { get; set; }
 
         #endregion
 
@@ -111,6 +107,7 @@ namespace Wallppr.Data
 
             #region Wallpapers
 
+            // Wallpaper
             modelBuilder.Entity<Wallpaper>(entity =>
             {
                 entity.HasKey(x => x.Id);
@@ -124,14 +121,27 @@ namespace Wallppr.Data
                 entity.Property(x => x.IsFavorite)
                     .HasConversion(c => Convert.ToInt32(c),
                         c => Convert.ToBoolean(c));
+                entity.Property(x => x.IsDownloaded)
+                    .HasConversion(c => Convert.ToInt32(c),
+                        c => Convert.ToBoolean(c));
                 entity.Property(x => x.Thumbnail)
                     .HasConversion(c => c.BitmapImageToPath(),
                         c => c.PathToBitmapImage());
             });
 
+            // Color
             modelBuilder.Entity<Models.Wallpaper.Entities.Color>(entity =>
             {
                 entity.HasKey(x => x.Id);
+            });
+
+            // History
+            modelBuilder.Entity<History>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.AddedDate)
+                    .HasConversion(c => c.ToString("yyyy-MM-dd HH:mm:ss", Settings.CultureInfo),
+                        c => DateTime.Parse(c));
             });
 
             #endregion

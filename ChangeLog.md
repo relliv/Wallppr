@@ -1,5 +1,10 @@
 ## 0.0.3
-- TODO: Seen, Dont show again, color selection
+- Fixed scroll to top issue when new page loaded
+- Removed HasId* converters
+- Removed default material icon resources
+- Added seen feature
+- Added history page
+- Improved app loading
 
 ## 0.0.2
 

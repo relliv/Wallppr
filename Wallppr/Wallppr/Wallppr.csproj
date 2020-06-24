@@ -266,6 +266,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedBehaviors\ScrollIntoViewForListView.cs" />
     <Compile Include="Data\AppDbContext.cs" />
     <Compile Include="Data\Settings.cs" />
     <Compile Include="Data\Setup.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Models\Common\Enums\ApplicationPage.cs" />
     <Compile Include="Models\Common\Enums\MessageDialogType.cs" />
     <Compile Include="Models\Common\Enums\PageType.cs" />
+    <Compile Include="Models\Wallpaper\Entities\History.cs" />
     <Compile Include="Models\Wallpaper\Json\MobileWallpapersJson.cs" />
     <Compile Include="Models\Wallpaper\Json\WallpapersJson.cs" />
     <Compile Include="Models\Common\NavbarItem.cs" />
@@ -332,16 +334,16 @@
     <Compile Include="UI\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="UI\Converters\DateTimeToTimeAgoConverter.cs" />
     <Compile Include="UI\Converters\EnumToStringConverter.cs" />
-    <Compile Include="UI\Converters\HasIdToReverseVisibilityConverter.cs" />
+    <Compile Include="UI\Converters\HasItemToVisibilityConverter.cs" />
     <Compile Include="UI\Converters\IntMinusConverter.cs" />
     <Compile Include="UI\Converters\IntToBoolConverter.cs" />
     <Compile Include="UI\Converters\IntToColorConverter.cs" />
-    <Compile Include="UI\Converters\HasIdToVisibilityConverter.cs" />
     <Compile Include="UI\Converters\MessageDialogIconConverter.cs" />
     <Compile Include="UI\Converters\MultipleBindingFallbackConverter.cs" />
     <Compile Include="UI\Converters\MultipleParametersConverter.cs" />
     <Compile Include="UI\Converters\NullToBoolConverter.cs" />
     <Compile Include="UI\Converters\NulltoCollapseConverter.cs" />
+    <Compile Include="UI\Converters\NullToHiddenConverter.cs" />
     <Compile Include="UI\Converters\NulltoThicknessZero.cs" />
     <Compile Include="UI\Converters\NullToVisibilityConverter.cs" />
     <Compile Include="UI\Converters\Pagination\PaginationIsCurrentConverter.cs" />
@@ -361,6 +363,9 @@
     </Compile>
     <Compile Include="UI\Pages\ExamplePage.xaml.cs">
       <DependentUpon>ExamplePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\History.xaml.cs">
+      <DependentUpon>History.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\MobileWallpapers.xaml.cs">
       <DependentUpon>MobileWallpapers.xaml</DependentUpon>
@@ -391,6 +396,7 @@
     <Compile Include="ViewModel\Base\ViewModelLocator.cs" />
     <Compile Include="ViewModel\Base\WindowViewModel.cs" />
     <Compile Include="ViewModel\Wallpaper\DesktopWallpapersViewModel.cs" />
+    <Compile Include="ViewModel\Wallpaper\HistoryWallpapersViewModel.cs" />
     <Compile Include="ViewModel\Wallpaper\MobileWallpapersViewModel.cs" />
     <Compile Include="ViewModel\Wallpaper\MyWallpapersViewModel.cs" />
     <Compile Include="ViewModel\Wallpaper\WallpapersCommonViewModel.cs" />
@@ -431,10 +437,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\ColorAndIcons\MaterialIcons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="UI\Controls\Navbar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -470,6 +472,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Pages\ExamplePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\History.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

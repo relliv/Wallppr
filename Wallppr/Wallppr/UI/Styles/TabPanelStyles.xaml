@@ -144,7 +144,7 @@
                     <ControlTemplate.Triggers>
                         <!--#region Icon Checks-->
 
-                        <DataTrigger Binding="{Binding ElementName=Icon, Path=Data}" Value="{x:Null}">
+                        <DataTrigger Binding="{Binding ElementName=Icon}" Value="{x:Null}">
                             <Setter TargetName="Icon" Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
 

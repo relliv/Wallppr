@@ -29,14 +29,13 @@
                    FontSize="20"/>
 
         <StackPanel Orientation="Horizontal">
-            <Button Style="{StaticResource LeftIconRedButtonStyle}"
-                    Content="Delete" Margin="50"
-                    Tag="{Binding Source={StaticResource DeleteEmptyOutline}, Path=Data}"
+            <Button Content="Delete" Margin="50"
+                    Tag="{StaticResource DeleteEmptyOutline}"
                     Command="{Binding DeleteCommand}"/>
 
             <Button Style="{StaticResource LeftIconButtonStyle}"
                     Content="Cancel" Margin="50"
-                    Tag="{Binding Source={StaticResource Close}, Path=Data}"
+                    Tag="{StaticResource Close}"
                     Command="{Binding CloseCommand}"/>
         </StackPanel>
     </StackPanel>

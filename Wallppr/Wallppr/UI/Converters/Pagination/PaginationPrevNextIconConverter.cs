@@ -19,19 +19,19 @@ namespace Wallppr.UI.Converters.Pagination
             {
                 if (val == PageType.Start)
                 {
-                    path = (Application.Current.FindResource("ChevronDoubleLeft") as Path).Data;
+                    path = Application.Current.FindResource("ChevronDoubleLeft") as Geometry;
                 }
                 else if (val == PageType.End)
                 {
-                    path = (Application.Current.FindResource("ChevronDoubleRight") as Path).Data;
+                    path = Application.Current.FindResource("ChevronDoubleRight") as Geometry;
                 }
                 else if (val == PageType.Next)
                 {
-                    path = (Application.Current.FindResource("ChevronRight") as Path).Data;
+                    path = Application.Current.FindResource("ChevronRight") as Geometry;
                 }
                 else if (val == PageType.Previous)
                 {
-                    path = (Application.Current.FindResource("ChevronLeft") as Path).Data;
+                    path = Application.Current.FindResource("ChevronLeft") as Geometry;
                 }
             }
 

@@ -19,27 +19,38 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- App Navbar Logo -->
-        <Border BorderBrush="{StaticResource ThemeColor5Brush}"
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!-- App Navbar Logo -->
+            <Border BorderBrush="{StaticResource ThemeColor5Brush}"
                 BorderThickness="0 0 0 1"
                 Padding="0 0 0 20">
-            <StackPanel Orientation="Horizontal" Margin="20 0">
-                <Image Height="70" 
+                <StackPanel Orientation="Horizontal" Margin="20 0">
+                    <Image Height="70" 
                    Source="pack://application:,,,/Resources/squares.ico"
                    Stretch="Uniform">
-                    <Image.Effect>
-                        <DropShadowEffect BlurRadius="10" Color="#000" 
-                                      Opacity=".05" ShadowDepth="5" Direction="0"/>
-                    </Image.Effect>
-                </Image>
+                        <Image.Effect>
+                            <DropShadowEffect BlurRadius="10" Color="#000" 
+                                              Opacity=".05" ShadowDepth="5" Direction="0"/>
+                        </Image.Effect>
+                    </Image>
 
-                <TextBlock Text="Wallppr"
+                    <TextBlock Text="Wallppr"
+                               Foreground="{StaticResource ThemeColor5Brush}"
+                               FontSize="30"
+                               FontWeight="Light"
+                               Margin="15 0"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Info -->
+            <TextBlock Text="{DynamicResource SplashScreenInfo}"
                        Foreground="{StaticResource ThemeColor5Brush}"
-                       FontSize="30"
+                       FontSize="20"
                        FontWeight="Light"
-                       Margin="15 0"
-                       VerticalAlignment="Center"/>
-            </StackPanel>
-        </Border>
+                       Margin="20 10"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Window>

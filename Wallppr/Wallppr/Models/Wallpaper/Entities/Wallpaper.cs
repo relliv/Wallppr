@@ -28,8 +28,10 @@ namespace Wallppr.Models.Wallpaper.Entities
         public int DimensionX { get; set; }
         public int DimensionY { get; set; }
         public bool IsFavorite { get; set; }
+        public bool IsDownloaded { get; set; }
         public WallpaperType WallpaperType { get; set; }
 
         public virtual ObservableCollection<Color> ColorPalette { get; set; }
+        public virtual ObservableCollection<History> History { get; set; }
     }
 }

@@ -45,6 +45,7 @@ namespace Wallppr.ViewModel.Base
                 SimpleIoc.Default.Register<MyWallpapersViewModel>();
                 SimpleIoc.Default.Register<DesktopWallpapersViewModel>();
                 SimpleIoc.Default.Register<MobileWallpapersViewModel>();
+                SimpleIoc.Default.Register<HistoryWallpapersViewModel>();
             }
         }
 
@@ -99,6 +100,14 @@ namespace Wallppr.ViewModel.Base
             get
             {
                 return ServiceLocator.Current.GetInstance<MobileWallpapersViewModel>();
+            }
+        }
+
+        public HistoryWallpapersViewModel HistoryWallpapersVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<HistoryWallpapersViewModel>();
             }
         }
 

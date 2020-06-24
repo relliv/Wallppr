@@ -5,13 +5,14 @@ using System.Windows.Data;
 
 namespace Wallppr.UI.Converters
 {
-    public class HasIdToReverseVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(bool), typeof(bool))]
+    public class NullToHiddenConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return Visibility.Visible;
+            if (value != null) return Visibility.Collapsed;
 
-            return (long)value > 0 ? Visibility.Collapsed : Visibility.Visible;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

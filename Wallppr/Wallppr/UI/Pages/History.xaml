@@ -1,15 +1,15 @@
-﻿<local:BasePage x:TypeArguments="viewmodel:MyWallpapersViewModel" x:Class="Wallppr.UI.Pages.MyWallpapers"
+﻿<local:BasePage x:Class="Wallppr.UI.Pages.History"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wallppr.UI.Pages"
       xmlns:viewmodel="clr-namespace:Wallppr.ViewModel.Wallpaper"
       xmlns:li="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF" 
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:behaviors="clr-namespace:Wallppr.AttachedBehaviors"
-      mc:Ignorable="d"
-      DataContext="{Binding MyWallpapersVM, Source={StaticResource Locator}}">
+      xmlns:local="clr-namespace:Wallppr.UI.Pages"
+      mc:Ignorable="d" 
+      DataContext="{Binding HistoryWallpapersVM, Source={StaticResource Locator}}">
 
     <TabControl Padding="0" Margin="0 0 10 0">
         <!-- Desktop Wallpapers #0 -->
@@ -139,7 +139,7 @@
                 </Grid>
             </Grid>
         </TabItem>
-        
+
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="SelectionChanged">
                 <i:InvokeCommandAction Command="{Binding TabSelectionChangedCommand}" 

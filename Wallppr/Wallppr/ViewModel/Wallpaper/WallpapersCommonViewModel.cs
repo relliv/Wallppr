@@ -19,6 +19,7 @@ using Wallppr.Helpers;
 using Wallppr.Models.AppSetting;
 using Wallppr.Models.Common;
 using Wallppr.Models.Wallpaper;
+using Wallppr.Models.Wallpaper.Entities;
 using Wallppr.Models.Wallpaper.Enums;
 using Wallppr.Models.Wallpaper.Json;
 using Wallppr.UI.i18N;
@@ -79,11 +80,21 @@ namespace Wallppr.ViewModel.Wallpaper
 
         #region Wallpaper
 
+        #region Random Wallpaper
+
         public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> RandomWallpapers { get; set; }
         public Visibility RandomWallpapersLIVisibility { get; set; }
+        public Models.Wallpaper.Entities.Wallpaper SelectedRandomWallpaper { get; set; }
+
+        #endregion
+
+        #region Latest Wallpaper
 
         public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> LatestWallpapers { get; set; }
         public Visibility LatestWallpapersLIVisibility { get; set; }
+        public Models.Wallpaper.Entities.Wallpaper SelectedLatestWallpaper { get; set; }
+
+        #endregion
 
         public Models.Wallpaper.Entities.Wallpaper SelectedWallpaper { get; set; }
         public WallpaperType WallpapersType { get; set; }
@@ -166,51 +177,63 @@ namespace Wallppr.ViewModel.Wallpaper
                         // get data
                         var wallpapersData = apiUrl.Get();
 
+                        // if has not valid server response data
+                        if (wallpapersData == null)
+                            return;
+
                         // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<WallpapersJson>(wallpapersData);
 
-                        using var db = new AppDbContext();
-
-                        // loop in wallpaper data
-                        foreach (var item in jsonObjwallpapers.data)
+                        if (jsonObjwallpapers != null)
                         {
-                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                            using var db = new AppDbContext();
+
+                            // loop in wallpaper data
+                            foreach (var item in jsonObjwallpapers.data)
                             {
-                                UId = item.id,
-                                Path = item.path,
-                                Thumbnail = item.thumbs.large.PathToBitmapImage(),
-                                DimensionX = item.dimension_x,
-                                DimensionY = item.dimension_y,
-                                WallpaperUrl = item.path,
-                                WallpaperThumbUrl = item.thumbs.large,
-                                ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
+                                var wallpaper = new Models.Wallpaper.Entities.Wallpaper
                                 {
-                                    ColorCode = color
-                                }).ToObservableCollection()
-                            };
+                                    UId = item.id,
+                                    Path = item.path,
+                                    Thumbnail = item.thumbs.large.PathToBitmapImage(),
+                                    DimensionX = item.dimension_x,
+                                    DimensionY = item.dimension_y,
+                                    WallpaperUrl = item.path,
+                                    WallpaperThumbUrl = item.thumbs.large,
+                                    ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
+                                    {
+                                        ColorCode = color
+                                    }).ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id).ToObservableCollection()
+                                };
 
-                            wallpaper = db.Wallpapers
-                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
-                            {
-                                Id = x.Id,
-                                UId = x.UId,
-                                Path = x.Path,
-                                Thumbnail = x.Thumbnail,
-                                DimensionX = x.DimensionX,
-                                DimensionY = x.DimensionY,
-                                IsFavorite = x.IsFavorite,
-                                WallpaperUrl = x.WallpaperUrl,
-                                WallpaperThumbUrl = x.WallpaperThumbUrl,
-                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                                .ToObservableCollection()
-                            })
-                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+                                wallpaper = db.Wallpapers
+                                .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    Id = x.Id,
+                                    UId = x.UId,
+                                    Path = x.Path,
+                                    Thumbnail = x.Thumbnail,
+                                    DimensionX = x.DimensionX,
+                                    DimensionY = x.DimensionY,
+                                    IsFavorite = x.IsFavorite,
+                                    WallpaperUrl = x.WallpaperUrl,
+                                    WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                    ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                    .ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id).ToObservableCollection()
+                                })
+                                .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
 
-                            RandomWallpapers.Add(wallpaper);
+                                RandomWallpapers.Add(wallpaper);
+                            }
+
+                            // select first wallpaper and scroll to top
+                            SelectedRandomWallpaper = RandomWallpapers.FirstOrDefault();
+
+                            // wallpaper pagination
+                            RandomPagination = new Pagination(jsonObjwallpapers.meta.total, RandomCurrentPage, RandomPageLimit, 10);
                         }
-
-                        // wallpaper pagination
-                        RandomPagination = new Pagination(jsonObjwallpapers.meta.total, RandomCurrentPage, RandomPageLimit, 10);
                     }
                     // load mobile wallpapers
                     else if (WallpapersType == WallpaperType.Mobile)
@@ -223,48 +246,60 @@ namespace Wallppr.ViewModel.Wallpaper
                         // get data
                         var wallpapersData = apiUrl.Get();
 
+                        // if has not valid server response data
+                        if (wallpapersData == null)
+                            return;
+
                         // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<MobileWallpapersJson>(wallpapersData);
 
-                        using var db = new AppDbContext();
-
-                        // loop in wallpapers data
-                        foreach (var item in jsonObjwallpapers.items)
+                        if (jsonObjwallpapers != null)
                         {
-                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
-                            {
-                                UId = item.id.ToString(),
-                                Path = item.variations.adapted.url,
-                                Thumbnail = item.variations.preview_small.url.PathToBitmapImage(),
-                                DimensionX = item.variations.adapted.resolution.width,
-                                DimensionY = item.variations.adapted.resolution.height,
-                                WallpaperUrl = item.variations.adapted.url,
-                                WallpaperThumbUrl = item.variations.preview_small.url,
-                                WallpaperType = WallpaperType.Mobile
-                            };
+                            using var db = new AppDbContext();
 
-                            wallpaper = db.Wallpapers
-                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                            // loop in wallpapers data
+                            foreach (var item in jsonObjwallpapers.items)
                             {
-                                Id = x.Id,
-                                UId = x.UId,
-                                Path = x.Path,
-                                Thumbnail = x.Thumbnail,
-                                DimensionX = x.DimensionX,
-                                DimensionY = x.DimensionY,
-                                IsFavorite = x.IsFavorite,
-                                WallpaperUrl = x.WallpaperUrl,
-                                WallpaperThumbUrl = x.WallpaperThumbUrl,
-                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                                .ToObservableCollection()
-                            })
-                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+                                var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    UId = item.id.ToString(),
+                                    Path = item.variations.adapted.url,
+                                    Thumbnail = item.variations.preview_small.url.PathToBitmapImage(),
+                                    DimensionX = item.variations.adapted.resolution.width,
+                                    DimensionY = item.variations.adapted.resolution.height,
+                                    WallpaperUrl = item.variations.adapted.url,
+                                    WallpaperThumbUrl = item.variations.preview_small.url,
+                                    WallpaperType = WallpaperType.Mobile,
+                                    History = db.History.Where(x => x.WallpaperUId == item.id.ToString()).ToObservableCollection()
+                                };
 
-                            RandomWallpapers.Add(wallpaper);
+                                wallpaper = db.Wallpapers
+                                .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    Id = x.Id,
+                                    UId = x.UId,
+                                    Path = x.Path,
+                                    Thumbnail = x.Thumbnail,
+                                    DimensionX = x.DimensionX,
+                                    DimensionY = x.DimensionY,
+                                    IsFavorite = x.IsFavorite,
+                                    WallpaperUrl = x.WallpaperUrl,
+                                    WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                    ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                    .ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id.ToString()).ToObservableCollection()
+                                })
+                                .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+
+                                RandomWallpapers.Add(wallpaper);
+                            }
+
+                            // select first wallpaper and scroll to top
+                            SelectedRandomWallpaper = RandomWallpapers.FirstOrDefault();
+
+                            // wallpaper pagination
+                            RandomPagination = new Pagination(jsonObjwallpapers.count, RandomCurrentPage, RandomPageLimit, 10);
                         }
-
-                        // wallpaper pagination
-                        RandomPagination = new Pagination(jsonObjwallpapers.count, RandomCurrentPage, RandomPageLimit, 10);
                     }
                 });
 
@@ -298,51 +333,63 @@ namespace Wallppr.ViewModel.Wallpaper
                         // get data
                         var wallpapersData = apiUrl.Get();
 
+                        // if has not valid server response data
+                        if (wallpapersData == null)
+                            return;
+
                         // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<WallpapersJson>(wallpapersData);
 
-                        using var db = new AppDbContext();
-
-                        // loop in wallpapers data
-                        foreach (var item in jsonObjwallpapers.data)
+                        if (jsonObjwallpapers != null)
                         {
-                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                            using var db = new AppDbContext();
+
+                            // loop in wallpapers data
+                            foreach (var item in jsonObjwallpapers.data)
                             {
-                                UId = item.id,
-                                Path = item.path,
-                                Thumbnail = item.thumbs.large.PathToBitmapImage(),
-                                DimensionX = item.dimension_x,
-                                DimensionY = item.dimension_y,
-                                WallpaperUrl = item.path,
-                                WallpaperThumbUrl = item.thumbs.large,
-                                ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
+                                var wallpaper = new Models.Wallpaper.Entities.Wallpaper
                                 {
-                                    ColorCode = color
-                                }).ToObservableCollection()
-                            };
+                                    UId = item.id,
+                                    Path = item.path,
+                                    Thumbnail = item.thumbs.large.PathToBitmapImage(),
+                                    DimensionX = item.dimension_x,
+                                    DimensionY = item.dimension_y,
+                                    WallpaperUrl = item.path,
+                                    WallpaperThumbUrl = item.thumbs.large,
+                                    ColorPalette = item.colors?.Select(color => new Models.Wallpaper.Entities.Color
+                                    {
+                                        ColorCode = color
+                                    }).ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id).ToObservableCollection()
+                                };
 
-                            wallpaper = db.Wallpapers
-                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
-                            {
-                                Id = x.Id,
-                                UId = x.UId,
-                                Path = x.Path,
-                                Thumbnail = x.Thumbnail,
-                                DimensionX = x.DimensionX,
-                                DimensionY = x.DimensionY,
-                                IsFavorite = x.IsFavorite,
-                                WallpaperUrl = x.WallpaperUrl,
-                                WallpaperThumbUrl = x.WallpaperThumbUrl,
-                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                                .ToObservableCollection()
-                            })
-                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+                                wallpaper = db.Wallpapers
+                                .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    Id = x.Id,
+                                    UId = x.UId,
+                                    Path = x.Path,
+                                    Thumbnail = x.Thumbnail,
+                                    DimensionX = x.DimensionX,
+                                    DimensionY = x.DimensionY,
+                                    IsFavorite = x.IsFavorite,
+                                    WallpaperUrl = x.WallpaperUrl,
+                                    WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                    ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                    .ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id).ToObservableCollection()
+                                })
+                                .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
 
-                            LatestWallpapers.Add(wallpaper);
+                                LatestWallpapers.Add(wallpaper);
+                            }
+
+                            // select first wallpaper and scroll to top
+                            SelectedLatestWallpaper = LatestWallpapers.FirstOrDefault();
+
+                            // wallpaper pagination
+                            LatestPagination = new Pagination(jsonObjwallpapers.meta.total, LatestCurrentPage, LatestPageLimit, 10);
                         }
-
-                        // wallpaper pagination
-                        LatestPagination = new Pagination(jsonObjwallpapers.meta.total, LatestCurrentPage, LatestPageLimit, 10);
                     }
                     // load mobile wallpapers
                     else if (WallpapersType == WallpaperType.Mobile)
@@ -355,48 +402,60 @@ namespace Wallppr.ViewModel.Wallpaper
                         // get data
                         var wallpapersData = apiUrl.Get();
 
+                        // if has not valid server response data
+                        if (wallpapersData == null)
+                            return;
+
                         // parsed wallpapers data
                         var jsonObjwallpapers = JsonConvert.DeserializeObject<MobileWallpapersJson>(wallpapersData);
 
-                        using var db = new AppDbContext();
-
-                        // loop in wallpapers data
-                        foreach (var item in jsonObjwallpapers.items)
+                        if (jsonObjwallpapers != null)
                         {
-                            var wallpaper = new Models.Wallpaper.Entities.Wallpaper
-                            {
-                                UId = item.id.ToString(),
-                                Path = item.variations.adapted.url,
-                                Thumbnail = item.variations.preview_small.url.PathToBitmapImage(),
-                                DimensionX = item.variations.adapted.resolution.width,
-                                DimensionY = item.variations.adapted.resolution.height,
-                                WallpaperUrl = item.variations.adapted.url,
-                                WallpaperThumbUrl = item.variations.preview_small.url,
-                                WallpaperType = WallpaperType.Mobile
-                            };
+                            using var db = new AppDbContext();
 
-                            wallpaper = db.Wallpapers
-                            .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                            // loop in wallpapers data
+                            foreach (var item in jsonObjwallpapers.items)
                             {
-                                Id = x.Id,
-                                UId = x.UId,
-                                Path = x.Path,
-                                Thumbnail = x.Thumbnail,
-                                DimensionX = x.DimensionX,
-                                DimensionY = x.DimensionY,
-                                IsFavorite = x.IsFavorite,
-                                WallpaperUrl = x.WallpaperUrl,
-                                WallpaperThumbUrl = x.WallpaperThumbUrl,
-                                ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                                .ToObservableCollection()
-                            })
-                            .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+                                var wallpaper = new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    UId = item.id.ToString(),
+                                    Path = item.variations.adapted.url,
+                                    Thumbnail = item.variations.preview_small.url.PathToBitmapImage(),
+                                    DimensionX = item.variations.adapted.resolution.width,
+                                    DimensionY = item.variations.adapted.resolution.height,
+                                    WallpaperUrl = item.variations.adapted.url,
+                                    WallpaperThumbUrl = item.variations.preview_small.url,
+                                    WallpaperType = WallpaperType.Mobile,
+                                    History = db.History.Where(x => x.WallpaperUId == item.id.ToString()).ToObservableCollection()
+                                };
 
-                            LatestWallpapers.Add(wallpaper);
+                                wallpaper = db.Wallpapers
+                                .Select(x => new Models.Wallpaper.Entities.Wallpaper
+                                {
+                                    Id = x.Id,
+                                    UId = x.UId,
+                                    Path = x.Path,
+                                    Thumbnail = x.Thumbnail,
+                                    DimensionX = x.DimensionX,
+                                    DimensionY = x.DimensionY,
+                                    IsFavorite = x.IsFavorite,
+                                    WallpaperUrl = x.WallpaperUrl,
+                                    WallpaperThumbUrl = x.WallpaperThumbUrl,
+                                    ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                                    .ToObservableCollection(),
+                                    History = db.History.Where(x => x.WallpaperUId == item.id.ToString()).ToObservableCollection()
+                                })
+                                .FirstOrDefault(x => x.UId == wallpaper.UId) ?? wallpaper;
+
+                                LatestWallpapers.Add(wallpaper);
+                            }
+
+                            // select first wallpaper and scroll to top
+                            SelectedLatestWallpaper = LatestWallpapers.FirstOrDefault();
+
+                            // wallpaper pagination
+                            LatestPagination = new Pagination(jsonObjwallpapers.count, LatestCurrentPage, LatestPageLimit, 10);
                         }
-
-                        // wallpaper pagination
-                        LatestPagination = new Pagination(jsonObjwallpapers.count, LatestCurrentPage, LatestPageLimit, 10);
                     }
                 });
 
@@ -721,14 +780,35 @@ namespace Wallppr.ViewModel.Wallpaper
                         wallpaper.Path = wallpaperPath;
                         wallpaper.Thumbnail = thumbnailPath.PathToBitmapImage();
 
+                        // has not extracted colors
                         if (wallpaper.ColorPalette?.Count <= 0)
                         {
                             ExtractColors(wallpaper);
                         }
 
+                        wallpaper.IsDownloaded = true;
+
                         using var db = new AppDbContext();
                         db.Wallpapers.Add(wallpaper);
                         db.SaveChanges();
+
+                        // cehck history
+                        var todayHistory = db.History.Any(x => x.WallpaperId == wallpaper.Id && x.AddedDate.Date != DateTime.Now.Date);
+
+                        if (!todayHistory)
+                        {
+                            var history = new History
+                            {
+                                WallpaperId = wallpaper.Id,
+                                WallpaperUId = SelectedWallpaper.UId
+                            };
+
+                            // add to history
+                            db.History.Add(history);
+                            db.SaveChanges();
+
+                            wallpaper.History.Add(history);
+                        }
 
                         ApplyAction(wallpaper, (string)values[1]);
                     };

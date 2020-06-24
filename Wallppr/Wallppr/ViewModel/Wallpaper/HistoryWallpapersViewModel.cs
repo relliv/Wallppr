@@ -15,9 +15,9 @@ using static Wallppr.DI.DI;
 
 namespace Wallppr.ViewModel.Wallpaper
 {
-    public class MyWallpapersViewModel : ViewModelBase
+    public class HistoryWallpapersViewModel : WallpapersCommonViewModel
     {
-        public MyWallpapersViewModel()
+        public HistoryWallpapersViewModel()
         {
             TabSelectionChangedCommand = new RelayParameterizedCommand(TabSelectionChanged);
             GoToPageCommand = new RelayParameterizedCommand(GoToPage);
@@ -89,7 +89,7 @@ namespace Wallppr.ViewModel.Wallpaper
         /// </summary>
         public void LoadDesktopWallpapers()
         {
-            new Task(async () => 
+            new Task(async () =>
             {
                 DesktopWallpapersLIVisibility = Visibility.Visible;
 
@@ -100,7 +100,7 @@ namespace Wallppr.ViewModel.Wallpaper
                     using var db = new AppDbContext();
 
                     var totalSize = db.Wallpapers
-                    .Where(x => x.WallpaperType == WallpaperType.Desktop && x.IsDownloaded)
+                    .Where(x => x.WallpaperType == WallpaperType.Desktop)
                     .Count();
 
                     totalSize = totalSize > 0 ? totalSize : 1;
@@ -120,10 +120,11 @@ namespace Wallppr.ViewModel.Wallpaper
                         WallpaperUrl = x.WallpaperUrl,
                         WallpaperThumbUrl = x.WallpaperThumbUrl,
                         WallpaperType = x.WallpaperType,
-                        IsDownloaded = x.IsDownloaded,
-                        ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id).ToObservableCollection(),
+                        ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
+                        .ToObservableCollection(),
+                        History = db.History.Where(c => c.WallpaperId == x.Id).ToObservableCollection()
                     })
-                    .Where(x => x.WallpaperType == WallpaperType.Desktop && x.IsDownloaded)
+                    .Where(x => x.WallpaperType == WallpaperType.Desktop && db.History.Any(c => c.WallpaperId == x.Id))
                     .OrderByDescending(x => x.AddedDate)
                     .Skip((DesktopCurrentPage - 1) * DesktopPageLimit)
                     .Take(DesktopPageLimit)
@@ -175,9 +176,10 @@ namespace Wallppr.ViewModel.Wallpaper
                         WallpaperThumbUrl = x.WallpaperThumbUrl,
                         WallpaperType = x.WallpaperType,
                         ColorPalette = db.Colors.Where(c => c.WallpaperId == x.Id)
-                        .ToObservableCollection()
+                        .ToObservableCollection(),
+                        History = db.History.Where(c => c.WallpaperId == x.Id).ToObservableCollection()
                     })
-                    .Where(x => x.WallpaperType == WallpaperType.Mobile && x.IsDownloaded)
+                    .Where(x => x.WallpaperType == WallpaperType.Mobile && db.History.Any(c => c.WallpaperId == x.Id))
                     .OrderByDescending(x => x.AddedDate)
                     .Skip((MobileCurrentPage - 1) * MobilePageLimit)
                     .Take(MobilePageLimit)
@@ -234,7 +236,7 @@ namespace Wallppr.ViewModel.Wallpaper
             //ViewModelApplication.TempWallpapers = Wallpapers;
             //ViewModelApplication.TempPagination = DesktopPagination;
             ViewModelApplication.BackToButtonVisibility = Visibility.Visible;
-            ViewModelApplication.PreviousPage = ApplicationPage.MyWallpapers;
+            ViewModelApplication.PreviousPage = ApplicationPage.History;
 
             ViewModelApplication.GoToPage(ApplicationPage.Wallpaper);
         }
