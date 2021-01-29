@@ -85,6 +85,7 @@ namespace Wallppr.ViewModel.Wallpaper
         public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> RandomWallpapers { get; set; }
         public Visibility RandomWallpapersLIVisibility { get; set; }
         public Models.Wallpaper.Entities.Wallpaper SelectedRandomWallpaper { get; set; }
+        public bool IsProcessingRandomWallpapers { get; set; }
 
         #endregion
 
@@ -93,6 +94,7 @@ namespace Wallppr.ViewModel.Wallpaper
         public ObservableCollection<Models.Wallpaper.Entities.Wallpaper> LatestWallpapers { get; set; }
         public Visibility LatestWallpapersLIVisibility { get; set; }
         public Models.Wallpaper.Entities.Wallpaper SelectedLatestWallpaper { get; set; }
+        public bool IsProcessingLatestWallpapers { get; set; }
 
         #endregion
 
@@ -156,8 +158,12 @@ namespace Wallppr.ViewModel.Wallpaper
         /// </summary>
         public void LoadRandomWallpapers()
         {
+            if (IsProcessingRandomWallpapers)
+                return;
+
             new Task(async () =>
             {
+                IsProcessingRandomWallpapers = true;
                 RandomWallpapersLIVisibility = Visibility.Visible;
 
                 await Task.Delay(700);
@@ -304,6 +310,7 @@ namespace Wallppr.ViewModel.Wallpaper
                 });
 
                 RandomWallpapersLIVisibility = Visibility.Hidden;
+                IsProcessingRandomWallpapers = false;
             }).Start();
         }
 
@@ -312,11 +319,15 @@ namespace Wallppr.ViewModel.Wallpaper
         /// </summary>
         public void LoadLatestWallpapers()
         {
+            if (IsProcessingLatestWallpapers)
+                return;
+
             new Task(async () =>
             {
+                IsProcessingLatestWallpapers = true;
                 LatestWallpapersLIVisibility = Visibility.Visible;
 
-                await Task.Delay(700);
+                await Task.Delay(1000);
 
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -460,6 +471,7 @@ namespace Wallppr.ViewModel.Wallpaper
                 });
 
                 LatestWallpapersLIVisibility = Visibility.Hidden;
+                IsProcessingLatestWallpapers = false;
             }).Start();
         }
 

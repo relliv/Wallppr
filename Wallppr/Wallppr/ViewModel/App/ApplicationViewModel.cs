@@ -7,10 +7,10 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using Wallppr.Helpers;
 using Wallppr.UI.i18N;
-using KOR.ReleaseCheck;
 using System.Linq;
 using System;
 using System.Diagnostics;
+using Wallppr.ReleaseCheck;
 
 namespace Wallppr.ViewModel.App
 {
@@ -54,32 +54,32 @@ namespace Wallppr.ViewModel.App
         {
             try
             {
-                ReleaseCheck.GithubUsername = "EgoistDeveloper";
-                ReleaseCheck.GithubRepo = "Wallppr";
-                ReleaseCheck.UserAgentHeader = "Wallppr App";
+                //ReleaseCheck.GithubUsername = "EgoistDeveloper";
+                //ReleaseCheck.GithubRepo = "Wallppr";
+                //ReleaseCheck.UserAgentHeader = "Wallppr App";
 
-                var releases = ReleaseCheck.GetReleases();
+                //var releases = ReleaseCheck.GetReleases();
 
-                if (releases.Count > 0)
-                {
-                    var lastRelease = releases.First();
-                    var lastVersion = lastRelease.TagName.Replace("v", null);
+                //if (releases.Count > 0)
+                //{
+                //    var lastRelease = releases.First();
+                //    var lastVersion = lastRelease.TagName.Replace("v", null);
 
-                    var version1 = new Version(Settings.AppVersion);
-                    var version2 = new Version(lastVersion);
+                //    var version1 = new Version(Settings.AppVersion);
+                //    var version2 = new Version(lastVersion);
 
-                    if (version1.CompareTo(version2) < 0)
-                    {
-                        if (MessageBox.Show(
-                            LanguageResourceDictionary["ThereIsNewerVersion"].ToString(), 
-                            LanguageResourceDictionary["Update"].ToString(), 
-                            MessageBoxButton.YesNo, 
-                            MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                        {
-                            Process.Start(lastRelease.HtmlUrl.OriginalString);
-                        }
-                    }
-                }
+                //    if (version1.CompareTo(version2) < 0)
+                //    {
+                //        if (MessageBox.Show(
+                //            LanguageResourceDictionary["ThereIsNewerVersion"].ToString(), 
+                //            LanguageResourceDictionary["Update"].ToString(), 
+                //            MessageBoxButton.YesNo, 
+                //            MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                //        {
+                //            Process.Start(lastRelease.HtmlUrl.OriginalString);
+                //        }
+                //    }
+                //}
             }
             catch (Exception exp)
             {

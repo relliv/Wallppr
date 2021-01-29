@@ -1,3 +1,6 @@
+## 0.0.4
+- Fixed too many requests issue when loading latest wallpapers
+
 ## 0.0.3
 - Fixed scroll to top issue when new page loaded
 - Removed HasId* converters

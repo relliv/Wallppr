@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Wallppr.UI.i18N;
-using Wallppr.Helpers;
-using KOR.ReleaseCheck;
 
 namespace Wallppr.Data
 {

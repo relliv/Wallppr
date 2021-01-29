@@ -77,13 +77,13 @@
                 </Grid>
 
                 <!-- List Items -->
-                <ListView x:Name="TvChannels" Grid.Row="1" Grid.ColumnSpan="2" 
+                <!--<ListView x:Name="TvChannels" Grid.Row="1" Grid.ColumnSpan="2" 
                           Margin="0 10 0 0"
                           ItemTemplate="{StaticResource TvChannelItemDataTemplate}" 
                           ItemsSource="{Binding TvChannels}"
                           VerticalAlignment="Top"
                           ScrollViewer.CanContentScroll="False">
-                </ListView>
+                </ListView>-->
 
                 <!-- Pagination -->
                 <Grid Grid.Row="2" Margin="0 5 0 0">
@@ -170,14 +170,14 @@
                     </ComboBox>
                 </Grid>
 
-                <!-- List Items -->
+                <!-- List Items --><!--
                 <ListView x:Name="FavoriteTvChannels" Grid.Row="1" Grid.ColumnSpan="2" 
                           Margin="0 10 0 0"
                           ItemTemplate="{StaticResource TvChannelItemDataTemplate}" 
                           ItemsSource="{Binding FavoriteTvChannels}"
                           VerticalAlignment="Top"
                           ScrollViewer.CanContentScroll="False">
-                </ListView>
+                </ListView>-->
 
                 <!-- Pagination -->
                 <Grid Grid.Row="2" Margin="0 5 0 0">

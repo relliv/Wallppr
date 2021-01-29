@@ -7,6 +7,7 @@ Wallppr is wallpaper client for Windows.
 ## 📢 Key Features
 
 - Desktop & Mobile wallpapers
+- History wallpapers
 - Various resolutions and ratios
 - View, download, save as and set as background wallpaper
 
