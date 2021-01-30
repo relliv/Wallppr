@@ -17,6 +17,10 @@ See version details on **[Change Log](ChangeLog.md)**.
 - EN (en-US)
 - TR (tr-TR)
 
+## 🚀 Build Instructions
+1. Open the solution and wait until background tasks finished ()
+2. Restart Visual Studio and happy codings
+
 ## 🔨 API Source
 - [https://wallhaven.cc/](https://wallhaven.cc/)
 - [https://wallpaperscraft.com/](https://wallpaperscraft.com/)

@@ -1,3 +1,6 @@
+## 0.0.5
+- Fixed missing dependency and missing database issues
+
 ## 0.0.4
 - Fixed too many requests issue when loading latest wallpapers
 

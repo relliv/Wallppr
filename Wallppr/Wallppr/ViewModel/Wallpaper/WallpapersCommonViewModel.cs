@@ -801,10 +801,15 @@ namespace Wallppr.ViewModel.Wallpaper
                         wallpaper.IsDownloaded = true;
 
                         using var db = new AppDbContext();
-                        db.Wallpapers.Add(wallpaper);
-                        db.SaveChanges();
 
-                        // cehck history
+                        // if wallpaper is not saved
+                        if (wallpaper.Id == 0)
+                        {
+                            db.Wallpapers.Add(wallpaper);
+                            db.SaveChanges();
+                        }
+
+                        // check history for today
                         var todayHistory = db.History.Any(x => x.WallpaperId == wallpaper.Id && x.AddedDate.Date != DateTime.Now.Date);
 
                         if (!todayHistory)
