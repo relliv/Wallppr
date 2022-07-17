@@ -24,9 +24,9 @@ namespace Wallppr.Data
 
         public static readonly string AppRunningFolder = AppDomain.CurrentDomain.BaseDirectory;
 
-        public static readonly string AppDatabaseFile = $@"{AppRunningFolder}\Wallppr\Wallppr.db";
-        public static readonly string WallpaperDesktopFolder = $@"{AppRunningFolder}\Wallppr\Wallpapers\Desktop";
-        public static readonly string WallpaperMobileFolder = $@"{AppRunningFolder}\Wallppr\Wallpapers\Mobile";
-        public static readonly string WallpaperThumbnailsFolder = $@"{AppRunningFolder}\Wallppr\Thumbnails";
+        public static readonly string AppDatabaseFile = $@"{AppRunningFolder}Wallppr\Wallppr.db";
+        public static readonly string WallpaperDesktopFolder = $@"{AppRunningFolder}Wallppr\Wallpapers\Desktop";
+        public static readonly string WallpaperMobileFolder = $@"{AppRunningFolder}Wallppr\Wallpapers\Mobile";
+        public static readonly string WallpaperThumbnailsFolder = $@"{AppRunningFolder}Wallppr\Thumbnails";
     }
 }

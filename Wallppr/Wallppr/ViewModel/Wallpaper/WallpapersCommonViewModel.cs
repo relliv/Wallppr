@@ -625,7 +625,7 @@ namespace Wallppr.ViewModel.Wallpaper
                 {
                     var fileName = Path.GetFileName(wallpaper.Path);
 
-                    File.Copy(wallpaper.Path, $"{folderBrowserDialog.SelectedPath}\\{fileName}");
+                    File.Copy(wallpaper.Path, Path.Combine(folderBrowserDialog.SelectedPath, fileName));
                 }
             }
             else if (action == "Remove")
